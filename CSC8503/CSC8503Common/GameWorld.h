@@ -41,7 +41,13 @@ namespace NCL {
 			void ShuffleObjects(bool state) {
 				shuffleObjects = state;
 			}
-
+			/// <summary>
+			/// 计算游戏场景中所有的物体是否与提供的射线碰撞
+			/// </summary>
+			/// <param name="r">射线</param>
+			/// <param name="closestCollision">最近的碰撞发生的位置</param>
+			/// <param name="closestObject">是否选择最近的碰撞到的物体</param>
+			/// <returns>是否发生碰撞</returns>
 			bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false) const;
 			/// <summary>
 			/// 和UpdateScene一样 更新所有在游戏世界中的节点 

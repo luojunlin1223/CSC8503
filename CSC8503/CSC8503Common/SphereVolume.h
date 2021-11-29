@@ -15,7 +15,7 @@ namespace NCL {
 			return radius;
 		}
 	protected:
-		float	radius;
+		float	radius;//没有存储位置是因为 我们会把位置存在Transfrom类中 成为GameObject的一部分
 	};
 }
 

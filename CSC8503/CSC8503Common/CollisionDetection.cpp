@@ -51,15 +51,66 @@ bool CollisionDetection::RayIntersection(const Ray& r,GameObject& object, RayCol
 }
 
 bool CollisionDetection::RayBoxIntersection(const Ray&r, const Vector3& boxPos, const Vector3& boxSize, RayCollision& collision) {
-	return false;
+	/*
+	我们不去检查所有的六个面而是去检查其中的三个最接近的面，如果光线的方向是朝向左的就检查盒子的右面
+	*/
+	Vector3 boxMin = boxPos - boxSize;//size 是长度的一半
+	Vector3 boxMax = boxPos + boxSize;
+
+	Vector3 rayPos = r.GetPosition();
+	Vector3 rayDir = r.GetDirection();
+
+	Vector3 tVals(-1, -1, -1);//如果循环结束的时候这个最大值还是-1，这说明了BOX在射线的后面
+
+	for (int i = 0; i < 3; ++i) {
+		if (rayDir[i] > 0)
+			tVals[i] = (boxMin[i] - rayPos[i]) / rayDir[i];
+		else if (rayDir[i] <0) {
+			tVals[i] = (boxMax[i] - rayPos[i]) / rayDir[i];
+		}
+	}
+	
+	float bestT = tVals.GetMaxElement();
+	if (bestT < 0.0f)
+		return false;
+
+	Vector3 intersection = rayPos + (rayDir*bestT);
+	const float epsilon = 0.0001f;//余地
+	for (int i = 0; i < 3; ++i) {
+		if (intersection[i] + epsilon<boxMin[i] ||
+			intersection[i] - epsilon>boxMax[i]) {
+			return false;
+		}
+	}
+	collision.collidedAt = intersection;
+	collision.rayDistance = bestT;
+
+	return true;
 }
 
 bool CollisionDetection::RayAABBIntersection(const Ray&r, const Transform& worldTransform, const AABBVolume& volume, RayCollision& collision) {
-	return false;
+	Vector3 boxPos = worldTransform.GetPosition();
+	Vector3 boxSize = volume.GetHalfDimensions();
+	return RayBoxIntersection(r,boxPos,boxSize,collision);
 }
 
 bool CollisionDetection::RayOBBIntersection(const Ray&r, const Transform& worldTransform, const OBBVolume& volume, RayCollision& collision) {
-	return false;
+	Quaternion orientaion = worldTransform.GetOrientation();
+	Vector3 position = worldTransform.GetPosition();
+
+	Matrix3 transform = Matrix3(orientaion);
+	Matrix3 invTransform = Matrix3(orientaion.Conjugate());
+
+	Vector3 localRayPos = r.GetPosition() - position;
+
+	Ray tempRay(invTransform * localRayPos, invTransform * r.GetDirection());
+
+	bool collided = RayBoxIntersection(tempRay,Vector3(),volume.GetHalfDimensions(),collision);
+
+	if (collided)
+		collision.collidedAt = transform * collision.collidedAt + position;
+
+	return collided;
 }
 
 bool CollisionDetection::RayCapsuleIntersection(const Ray& r, const Transform& worldTransform, const CapsuleVolume& volume, RayCollision& collision) {

@@ -507,7 +507,7 @@ bool TutorialGame::SelectObject() {
 				lockedObject	= nullptr;
 			}
 
-			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
+			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());//从鼠标位置发出一道射线
 
 			RayCollision closestCollision;
 			if (world->Raycast(ray, closestCollision, true)) {

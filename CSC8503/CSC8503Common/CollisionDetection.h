@@ -63,15 +63,53 @@ namespace NCL {
 			const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 		//TODO ADD THIS PROPERLY
+
+		/// <summary>
+		/// 计算四面体碰撞的基础方法
+		/// </summary>
+		/// <param name="r">射线</param>
+		/// <param name="boxPos">碰撞体的位置</param>
+		/// <param name="boxSize">碰撞体的半径</param>
+		/// <param name="collision">碰撞信息</param>
+		/// <returns></returns>
 		static bool RayBoxIntersection(const Ray&r, const Vector3& boxPos, const Vector3& boxSize, RayCollision& collision);
 
 		static Ray BuildRayFromMouse(const Camera& c);
-
+		/// <summary>
+		/// 根据传入游戏物体的碰撞体类型选择对应的计算碰撞的方式
+		/// </summary>
+		/// <param name="r">射线</param>
+		/// <param name="object">用于检测的游戏目标</param>
+		/// <param name="collisions">用来存放碰撞的结果，包括了碰撞到的物体，碰撞的位置等等</param>
+		/// <returns>返回检查是否成功</returns>
 		static bool RayIntersection(const Ray&r, GameObject& object, RayCollision &collisions);
 
-
+		/// <summary>
+		/// AABB BOX碰撞分支
+		/// </summary>
+		/// <param name="r"></param>
+		/// <param name="worldTransform"></param>
+		/// <param name="volume"></param>
+		/// <param name="collision"></param>
+		/// <returns></returns>
 		static bool RayAABBIntersection(const Ray&r, const Transform& worldTransform, const AABBVolume&	volume, RayCollision& collision);
+		/// <summary>
+		/// OBB BOX碰撞分支
+		/// </summary>
+		/// <param name="r"></param>
+		/// <param name="worldTransform"></param>
+		/// <param name="volume"></param>
+		/// <param name="collision"></param>
+		/// <returns></returns>
 		static bool RayOBBIntersection(const Ray&r, const Transform& worldTransform, const OBBVolume&	volume, RayCollision& collision);
+		/// <summary>
+		/// 计算球体的碰撞
+		/// </summary>
+		/// <param name="r">射线</param>
+		/// <param name="worldTransform">物体的世界坐标</param>
+		/// <param name="volume">碰撞体的体积</param>
+		/// <param name="collision">碰撞的结果</param>
+		/// <returns>返回检查是否成功</returns>
 		static bool RaySphereIntersection(const Ray&r, const Transform& worldTransform, const SphereVolume& volume, RayCollision& collision);
 		static bool RayCapsuleIntersection(const Ray& r, const Transform& worldTransform, const CapsuleVolume& volume, RayCollision& collision);
 

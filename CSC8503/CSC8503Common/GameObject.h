@@ -85,6 +85,8 @@ namespace NCL {
 			string	name; //游戏对象的名字
 
 			Vector3 broadphaseAABB;
+
+			
 		};
 	}
 }

@@ -5,7 +5,7 @@
 namespace NCL {
 	namespace Maths {
 		struct RayCollision {
-			void*		node;			//Node that was hit
+			void*		node;			//Node that was hit 这条射线有可能会和任意类型的物体碰撞
 			Vector3		collidedAt;		//WORLD SPACE position of the collision!
 			float		rayDistance;
 
