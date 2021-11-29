@@ -509,10 +509,21 @@ bool TutorialGame::SelectObject() {
 
 			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());//从鼠标位置发出一道射线
 
+			//从场景的物体发出另外一束光线来确定谁从前方看到选择的物体
+
 			RayCollision closestCollision;
 			if (world->Raycast(ray, closestCollision, true)) {
 				selectionObject = (GameObject*)closestCollision.node;
 				selectionObject->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
+				//可以计算出在点击物体前方的正方体 因为其他体积还没有写碰撞函数 所以无法实现
+				/*Ray ray_ = Ray(selectionObject->GetTransform().GetPosition(),Vector3(0,0,-1)); 
+
+				if (world->Raycast(ray_, closestCollision, true)) {
+					
+					selectionObject = (GameObject*)closestCollision.node;
+					selectionObject->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
+				
+				}*/
 				return true;
 			}
 			else {
