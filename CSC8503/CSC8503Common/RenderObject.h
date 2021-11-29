@@ -3,7 +3,10 @@
 #include "../../Common/TextureBase.h"
 #include "../../Common/ShaderBase.h"
 #include "../../Common/Vector4.h"
-
+/*
+渲染目标需要提供 网格体、贴图、shader、变换、颜色
+因为我们使用的是简单的光照模型 所以贴图没有指向Bump贴图的部分 （在复制的游戏引擎中贴图也许会被换做是一个指向材料的指针数组）
+*/
 namespace NCL {
 	using namespace NCL::Rendering;
 
@@ -51,7 +54,7 @@ namespace NCL {
 			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;
-			Vector4			colour;
+			Vector4			colour;//颜色用来表达 如果物体被点击或者物体发生碰撞的时候 给出反应
 		};
 	}
 }

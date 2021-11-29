@@ -3,6 +3,9 @@
 #include "Ray.h"
 #include "CollisionDetection.h"
 #include "QuadTree.h"
+/*
+游戏世界总览，增加和减少游戏物体等等
+*/
 namespace NCL {
 		class Camera;
 		using Maths::Ray;
@@ -40,7 +43,12 @@ namespace NCL {
 			}
 
 			bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false) const;
-
+			/// <summary>
+			/// 和UpdateScene一样 更新所有在游戏世界中的节点 
+			/// 渲染对象会利用这个类来创造渲染队列
+			/// 物理对象会利用这个类来创造物理计算队列
+			/// </summary>
+			/// <param name="dt">时间步数</param>
 			virtual void UpdateWorld(float dt);
 
 			void OperateOnContents(GameObjectFunc f);

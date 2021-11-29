@@ -3,7 +3,9 @@
 #include "../../Common/Matrix3.h"
 
 using namespace NCL::Maths;
-
+/*
+提供所有与物理交互有关的属性 
+*/
 namespace NCL {
 	class CollisionVolume;
 	

@@ -9,7 +9,9 @@
 using std::vector;
 
 using namespace NCL::Maths;
-
+/*
+	有些时候我们需要知道物体的方向或者是大小 这些信息通常被放在了3X3的矩阵中 为了方便我们把这些信息单独写一个类出来
+*/
 namespace NCL {
 	namespace CSC8503 {
 		class Transform
@@ -37,6 +39,9 @@ namespace NCL {
 			Matrix4 GetMatrix() const {
 				return matrix;
 			}
+			/**
+			@brief 保持游戏每一帧都更新最新位置
+			*/
 			void UpdateMatrix();
 		protected:
 			Matrix4		matrix;

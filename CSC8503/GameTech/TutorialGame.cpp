@@ -286,6 +286,7 @@ Builds a game object that uses a sphere mesh for its graphics, and a bounding sp
 rigid body representation. This and the cube function will let you build a lot of 'simple' 
 physics worlds. You'll probably need another function for the creation of OBB cubes too.
 
+展示了创建一个新的游戏目标的基本过程
 */
 GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
 	GameObject* sphere = new GameObject();
@@ -298,8 +299,8 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 		.SetScale(sphereSize)
 		.SetPosition(position);
 
-	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
-	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
+	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));//如果你想看到这个物体就需要把他加入render队列
+	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));//如果要使用物理计算就需要一个BoundingVolume和加入物理队列
 
 	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
 	sphere->GetPhysicsObject()->InitSphereInertia();

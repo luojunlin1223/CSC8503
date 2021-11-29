@@ -10,7 +10,6 @@ namespace NCL {
 			~PhysicsSystem();
 
 			void Clear();
-
 			void Update(float dt);
 
 			void UseGravity(bool state) {
@@ -39,7 +38,7 @@ namespace NCL {
 
 			void ImpulseResolveCollision(GameObject& a , GameObject&b, CollisionDetection::ContactPoint& p) const;
 
-			GameWorld& gameWorld;
+			GameWorld& gameWorld;//拥有一个游戏世界的参考可以用于计算物理效应
 
 			bool	applyGravity;
 			Vector3 gravity;

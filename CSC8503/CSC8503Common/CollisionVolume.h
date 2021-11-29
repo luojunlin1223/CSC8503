@@ -1,4 +1,7 @@
 #pragma once
+/*
+我们需要让物理系统知道我们的物体是什么形状
+*/
 namespace NCL {
 	enum class VolumeType {
 		AABB	= 1,
