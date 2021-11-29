@@ -192,7 +192,7 @@ Ray CollisionDetection::BuildRayFromMouse(const Camera& cam) {
 
 	//std::cout << "Ray Direction:" << c << std::endl;
 
-	return Ray(cam.GetPosition(), c);
+	return Ray(cam.GetPosition(), c,Default);
 }
 
 //http://bookofhook.com/mousepick.pdf

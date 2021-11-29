@@ -8,10 +8,15 @@
 #include <vector>
 
 using std::vector;
-
+enum Layers
+{
+	Default,
+	Water,
+	UI,
+	Player
+};
 namespace NCL {
 	namespace CSC8503 {
-
 		class GameObject	{
 		public:
 			GameObject(string name = "");
@@ -73,6 +78,10 @@ namespace NCL {
 				return worldID;
 			}
 
+			Layers GetLayer() const { return layers; }
+
+			void SetLayer(Layers l) { layers = l; }
+
 		protected:
 			Transform			transform;//提供物体的世界坐标，大小，本地和世界坐标变换矩阵
 
@@ -86,7 +95,7 @@ namespace NCL {
 
 			Vector3 broadphaseAABB;
 
-			
+			Layers layers;//游戏物体属于什么layer
 		};
 	}
 }

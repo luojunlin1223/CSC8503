@@ -9,8 +9,9 @@ GameObject::GameObject(string objectName)	{
 	isActive		= true;
 	boundingVolume	= nullptr;
 	physicsObject	= nullptr;
-	
+
 	renderObject = nullptr;
+	layers = Default;
 }
 
 GameObject::~GameObject()	{
