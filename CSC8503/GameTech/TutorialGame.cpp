@@ -508,13 +508,14 @@ bool TutorialGame::SelectObject() {
 			}
 
 			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());//从鼠标位置发出一道射线
-
+			
 			//从场景的物体发出另外一束光线来确定谁从前方看到选择的物体
 
 			RayCollision closestCollision;
 			if (world->Raycast(ray, closestCollision, true)) {
 				selectionObject = (GameObject*)closestCollision.node;
 				selectionObject->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
+				
 				//可以计算出在点击物体前方的正方体 因为其他体积还没有写碰撞函数 所以无法实现
 				/*Ray ray_ = Ray(selectionObject->GetTransform().GetPosition(),Vector3(0,0,-1)); 
 
@@ -522,6 +523,7 @@ bool TutorialGame::SelectObject() {
 					
 					selectionObject = (GameObject*)closestCollision.node;
 					selectionObject->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
+					
 				
 				}*/
 				return true;
@@ -565,5 +567,24 @@ added linear motion into our physics system. After the second tutorial, objects 
 line - after the third, they'll be able to twist under torque aswell.
 */
 void TutorialGame::MoveSelectedObject() {
+	renderer->DrawString("Click Force:"+std::to_string(forceMagnitude),
+		Vector2(10,20));
+	forceMagnitude += Window::GetWindow()->GetMouse()->GetWheelMovement() * 100.0f;//使用鼠标滚轮来控制力的量
 
+	if (!selectionObject) {
+		return;
+	}
+
+	if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {//鼠标右键对选中的物体施加力
+		Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
+
+		RayCollision closestCollision;
+		if (world->Raycast(ray, closestCollision, true)) {
+			if (closestCollision.node == selectionObject) {
+				//selectionObject->GetPhysicsObject()->AddForce(ray.GetDirection() * forceMagnitude);
+				selectionObject->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * forceMagnitude, closestCollision.collidedAt);
+			}
+		}
+	
+	}
 }

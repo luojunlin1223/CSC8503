@@ -27,7 +27,10 @@ namespace NCL {
 			void NarrowPhase();
 
 			void ClearForces();
-
+			/// <summary>
+			/// 加速度积分
+			/// </summary>
+			/// <param name="dt">积分的步数</param>
 			void IntegrateAccel(float dt);
 			void IntegrateVelocity(float dt);
 

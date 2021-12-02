@@ -43,14 +43,20 @@ namespace NCL {
 
 			void ApplyAngularImpulse(const Vector3& force);
 			void ApplyLinearImpulse(const Vector3& force);
-			
+			/// <summary>
+			/// 给物体施加一个力
+			/// </summary>
+			/// <param name="force">力</param>
 			void AddForce(const Vector3& force);
 
 			void AddForceAtPosition(const Vector3& force, const Vector3& position);
 
 			void AddTorque(const Vector3& torque);
 
-
+			/// <summary>
+			/// 当一帧结束的时候，消除物体的所有力
+			/// 这说明了我们不是一次施加N牛顿的力 而是通过一帧一帧逐步施加1N的力
+			/// </summary>
 			void ClearForces();
 
 			void SetLinearVelocity(const Vector3& v) {
@@ -74,13 +80,13 @@ namespace NCL {
 			const CollisionVolume* volume;
 			Transform*		transform;
 
-			float inverseMass;
+			float inverseMass;//记录质量得inverse是为了用来表达一个物体拥有无限大的质量 F=am-1
 			float elasticity;
 			float friction;
 
 			//linear stuff
-			Vector3 linearVelocity;
-			Vector3 force;
+			Vector3 linearVelocity;//线性的速度
+			Vector3 force;//力
 			
 
 			//angular stuff
