@@ -20,7 +20,7 @@ namespace NCL {
 	{
 	public:
 		struct ContactPoint {
-			Vector3 localA;
+			Vector3 localA; //分离了contact point的概念 用法向量 渗透多少 
 			Vector3 localB;
 			Vector3 normal;
 			float	penetration;
@@ -118,7 +118,13 @@ namespace NCL {
 
 		static bool	AABBTest(const Vector3& posA, const Vector3& posB, const Vector3& halfSizeA, const Vector3& halfSizeB);
 
-
+		/// <summary>
+		/// 输入两个游戏物体 决定他们是否碰撞 
+		/// </summary>
+		/// <param name="a">第一个物体</param>
+		/// <param name="b">第二个物体</param>
+		/// <param name="collisionInfo">碰撞的信息</param>
+		/// <returns>是否碰撞</returns>
 		static bool ObjectIntersection(GameObject* a, GameObject* b, CollisionInfo& collisionInfo);
 
 

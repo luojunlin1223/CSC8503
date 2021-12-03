@@ -289,12 +289,11 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 展示了创建一个新的游戏目标的基本过程
 */
 GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
-	GameObject* sphere = new GameObject();
+	GameObject* sphere = new GameObject("Sphere");
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	sphere->SetBoundingVolume((CollisionVolume*)volume);
-
 	sphere->GetTransform()
 		.SetScale(sphereSize)
 		.SetPosition(position);
@@ -333,7 +332,7 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfH
 }
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
-	GameObject* cube = new GameObject();
+	GameObject* cube = new GameObject("Cube");
 
 	AABBVolume* volume = new AABBVolume(dimensions);
 
