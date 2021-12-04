@@ -105,6 +105,9 @@
     <ClInclude Include="PositionConstraint.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClInclude Include="QuadTreeNode.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameWorld.cpp">
@@ -153,6 +156,9 @@
       <Filter>CollisionDetection</Filter>
     </ClCompile>
     <ClCompile Include="PositionConstraint.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTreeNode.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
   </ItemGroup>

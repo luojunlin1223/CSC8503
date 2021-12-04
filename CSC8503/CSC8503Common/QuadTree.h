@@ -104,4 +104,5 @@ namespace NCL {
 			int maxSize;
 		};
 	}
+
 }

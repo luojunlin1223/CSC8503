@@ -140,6 +140,7 @@
     <ClInclude Include="NavigationPath.h" />
     <ClInclude Include="OBBVolume.h" />
     <ClInclude Include="PositionConstraint.h" />
+    <ClInclude Include="QuadTreeNode.h" />
     <ClInclude Include="SphereVolume.h" />
     <ClInclude Include="CollisionVolume.h" />
     <ClInclude Include="CollisionDetection.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="PushdownMachine.cpp" />
     <ClCompile Include="PushdownState.cpp" />
     <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="QuadTreeNode.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />

@@ -28,7 +28,7 @@ bool GameObject::GetBroadphaseAABB(Vector3&outSize) const {
 	return true;
 }
 
-void GameObject::UpdateBroadphaseAABB() {
+void GameObject::UpdateBroadphaseAABB() {//要把其他类型的碰撞体转换为AABB类型的碰撞体
 	if (!boundingVolume) {
 		return;
 	}
