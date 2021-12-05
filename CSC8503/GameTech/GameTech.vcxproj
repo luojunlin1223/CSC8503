@@ -141,12 +141,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BehaviourAction.cpp" />
+    <ClCompile Include="BehaviourNode.cpp" />
+    <ClCompile Include="BehaviourNodeWithChildren.cpp" />
+    <ClCompile Include="BehaviourSelector.cpp" />
+    <ClCompile Include="BehaviourSequence.cpp" />
     <ClCompile Include="GameTechRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="StateGameObject.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BehaviourAction.h" />
+    <ClInclude Include="BehaviourNode.h" />
+    <ClInclude Include="BehaviourNodeWithChildren.h" />
+    <ClInclude Include="BehaviourSelector.h" />
+    <ClInclude Include="BehaviourSequence.h" />
     <ClInclude Include="GameTechRenderer.h" />
     <ClInclude Include="StateGameObject.h" />
     <ClInclude Include="TutorialGame.h" />
