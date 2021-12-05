@@ -1,6 +1,7 @@
 #pragma once
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
+#include "StateGameObject.h"
 /*
 我们的任务是保证在物体渲染前相机移动、物理计算都是正确的。这个类的设计目的就是为了具体的游戏逻辑。作业会是这个类的子类
 */
@@ -46,6 +47,9 @@ namespace NCL {
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
+
+			StateGameObject* AddStateObjectToWorld(const Vector3& position);
+			StateGameObject* testStateObject;
 
 			GameTechRenderer*	renderer;
 			PhysicsSystem*		physics;
