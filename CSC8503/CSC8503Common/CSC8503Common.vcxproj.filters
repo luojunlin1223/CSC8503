@@ -108,6 +108,15 @@
     <ClInclude Include="QuadTreeNode.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClInclude Include="PauseScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameWorld.cpp">
@@ -160,6 +169,15 @@
     </ClCompile>
     <ClCompile Include="QuadTreeNode.cpp">
       <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroScreen.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

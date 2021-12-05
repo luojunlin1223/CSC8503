@@ -1,5 +1,5 @@
 #include "../../Common/Window.h"
-
+#include "../CSC8503Common/IntroScreen.h"
 #include "../CSC8503Common/StateMachine.h"
 #include "../CSC8503Common/StateTransition.h"
 #include "../CSC8503Common/State.h"
@@ -9,6 +9,7 @@
 #include "TutorialGame.h"
 #include "BehaviourSequence.h"
 #include "BehaviourSelector.h"
+#include "../CSC8503Common/PushdownMachine.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -211,6 +212,15 @@ void TestBehaviourTree() {
 	}
 	std::cout << "All done !\n";
 }
+void TestPushdownAutomata(Window * w) {
+	PushdownMachine machine(new IntroScreen());
+	while (w-> UpdateWindow()) {
+		float dt = w-> GetTimer()->GetTimeDeltaSeconds();
+		if (!machine.Update(dt)) {
+			return;
+		}
+	}
+}
 
 int main() {
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
@@ -227,6 +237,8 @@ int main() {
 	TestStateMachine();
 	TestPathfinding();
 	TestBehaviourTree();
+	//TestPushdownAutomata(w);
+
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 		if (dt > 0.1f) {
