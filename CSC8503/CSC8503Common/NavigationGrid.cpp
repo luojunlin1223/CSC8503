@@ -93,11 +93,13 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 		return false; //outside of map region!
 	}
 
-	GridNode* startNode = &allNodes[(fromZ * gridWidth) + fromX];
-	GridNode* endNode	= &allNodes[(toZ * gridWidth) + toX];
+	//确保访问的都是有效的内存 比如如果AI放置世界地图之外
 
-	std::vector<GridNode*>  openList;
-	std::vector<GridNode*>  closedList;
+	GridNode* startNode = &allNodes[(fromZ * gridWidth) + fromX];//开始节点
+	GridNode* endNode	= &allNodes[(toZ * gridWidth) + toX];//结束节点
+
+	std::vector<GridNode*>  openList;//开表
+	std::vector<GridNode*>  closedList;//闭表
 
 	openList.emplace_back(startNode);
 
@@ -108,7 +110,7 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 	GridNode* currentBestNode = nullptr;
 
 	while (!openList.empty()) {
-		currentBestNode = RemoveBestNode(openList);
+		currentBestNode = RemoveBestNode(openList); //从开启表中拿出评分最高的节点
 
 		if (currentBestNode == endNode) {			//we've found the path!
 			GridNode* node = endNode;
@@ -163,7 +165,7 @@ GridNode*  NavigationGrid::RemoveBestNode(std::vector<GridNode*>& list) const {
 	for (auto i = list.begin(); i != list.end(); ++i) {
 		if ((*i)->f < bestNode->f) {
 			bestNode	= (*i);
-			bestI		= i;
+			bestI		= i;//总是包含最好的节点
 		}
 	}
 	list.erase(bestI);
@@ -172,5 +174,5 @@ GridNode*  NavigationGrid::RemoveBestNode(std::vector<GridNode*>& list) const {
 }
 
 float NavigationGrid::Heuristic(GridNode* hNode, GridNode* endNode) const {
-	return (hNode->position - endNode->position).Length();
+	return (hNode->position - endNode->position).Length();//欧几里得启发式
 }
