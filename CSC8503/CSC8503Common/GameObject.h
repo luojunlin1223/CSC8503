@@ -17,10 +17,10 @@ enum Layers
 };
 namespace NCL {
 	namespace CSC8503 {
-		class GameObject	{
+		class GameObject {
 		public:
 			GameObject(string name = "");
-			~GameObject();
+			virtual ~GameObject();
 
 			void SetBoundingVolume(CollisionVolume* vol) {
 				boundingVolume = vol;
@@ -66,7 +66,7 @@ namespace NCL {
 				//std::cout << "OnCollisionEnd event occured!\n";
 			}
 
-			bool GetBroadphaseAABB(Vector3&outsize) const;
+			bool GetBroadphaseAABB(Vector3& outsize) const;
 
 			void UpdateBroadphaseAABB();
 
@@ -85,9 +85,9 @@ namespace NCL {
 		protected:
 			Transform			transform;//提供物体的世界坐标，大小，本地和世界坐标变换矩阵
 
-			CollisionVolume*	boundingVolume;//定义物体的碰撞形态
-			PhysicsObject*		physicsObject;
-			RenderObject*		renderObject;
+			CollisionVolume* boundingVolume;//定义物体的碰撞形态
+			PhysicsObject* physicsObject;
+			RenderObject* renderObject;
 
 			bool	isActive;//决定物体是否存在于render和physics交互中
 			int		worldID;
@@ -99,4 +99,3 @@ namespace NCL {
 		};
 	}
 }
-

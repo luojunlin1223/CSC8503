@@ -194,5 +194,8 @@
     <ClInclude Include="MeshMaterial.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="UserController.h">
+      <Filter>Windowing and Input</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
