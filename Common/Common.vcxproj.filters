@@ -111,6 +111,9 @@
     <ClCompile Include="MeshMaterial.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="UserController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">

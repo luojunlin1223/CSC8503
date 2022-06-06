@@ -82,6 +82,7 @@ namespace NCL {
 
 			void SetLayer(Layers l) { layers = l; }
 
+			virtual void update(float dt){}
 		protected:
 			Transform			transform;//提供物体的世界坐标，大小，本地和世界坐标变换矩阵
 

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "EventSystem.h"
+EventSystem* EventSystem::p_self = nullptr;
 extern EVENT_DEFINE g_Events[] =
 {
 		{"test"},
@@ -9,6 +10,7 @@ extern EVENT_DEFINE g_Events[] =
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {
+	p_self = this;
 	init();
 }
 
@@ -52,12 +54,6 @@ void NCL::CSC8599::EventSystem::PushEvent(const std::string& name, int n, ...)
 
 	eventQueue.emplace_back(event);
 	eventRecords.emplace_back(event->pEventDef->name);
-}
-
-EventSystem& NCL::CSC8599::EventSystem::Get()
-{
-	static EventSystem instance;
-	return  instance;
 }
 
 EVENT* NCL::CSC8599::EventSystem::HasHappened(const std::string& name)

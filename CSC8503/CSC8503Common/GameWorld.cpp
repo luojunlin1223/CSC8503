@@ -7,13 +7,14 @@
 
 using namespace NCL;
 using namespace NCL::CSC8503;
-
+GameWorld* GameWorld::p_self=nullptr;
 GameWorld::GameWorld()	{
 	mainCamera = new Camera();
 
 	shuffleConstraints	= false;
 	shuffleObjects		= false;
 	worldIDCounter		= 0;
+	p_self = this;
 }
 
 GameWorld::~GameWorld()	{
@@ -67,6 +68,10 @@ void GameWorld::UpdateWorld(float dt) {
 
 	if (shuffleConstraints) {
 		std::random_shuffle(constraints.begin(), constraints.end());
+	}
+	for(const auto i:gameObjects)
+	{
+		i->update(dt);
 	}
 }
 
@@ -125,4 +130,30 @@ void GameWorld::GetConstraintIterators(
 	std::vector<Constraint*>::const_iterator& last) const {
 	first	= constraints.begin();
 	last	= constraints.end();
+}
+
+GameObject* GameWorld::find_game_object(int id) 
+{
+	for (const auto i : gameObjects)
+	{
+		if (i->GetWorldID() == id)
+			return i;
+	}
+	return nullptr;
+}
+
+GameObject* GameWorld::find_nearest_game_object(GameObject* origin) const
+{                    
+	float min_distance = (gameObjects[0]->GetTransform().GetPosition() -origin->GetTransform().GetPosition()).Length();
+	GameObject* target = nullptr;
+	for (const auto i : gameObjects)
+	{
+		const float temp = (i->GetTransform().GetPosition() - origin->GetTransform().GetPosition()).Length();
+		if (i->GetWorldID()!=origin->GetWorldID()&&temp < min_distance)
+		{
+			min_distance = temp;
+			target = i;
+		}
+	}
+	return target;
 }

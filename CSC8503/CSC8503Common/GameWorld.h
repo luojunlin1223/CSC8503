@@ -66,7 +66,12 @@ namespace NCL {
 			void GetConstraintIterators(
 				std::vector<Constraint*>::const_iterator& first,
 				std::vector<Constraint*>::const_iterator& last) const;
-
+			static GameWorld* Get(){
+				return  p_self;
+			}
+			static GameWorld* p_self;
+			GameObject* find_game_object(int id) ;
+			GameObject* find_nearest_game_object(GameObject* origin) const ;
 		protected:
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;

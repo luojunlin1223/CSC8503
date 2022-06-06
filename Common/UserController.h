@@ -5,6 +5,7 @@ enum Buttons
 	ATTACK,
 	STOP,
 	PAUSE,
+	SWITCH_TARGET,
 	MAX_INPUT
 };
 
@@ -18,7 +19,16 @@ class UserController
 {
 public:
 	UserController() = default;
+	UserController(const UserController&) = delete;
+	UserController& operator=(const UserController&) = delete;
+
+	UserController(UserController&&) = delete;
+	UserController& operator=(const UserController&&) = delete;
+
 	virtual ~UserController() = default;
 	virtual Input get_inputs() { return {}; }
 	virtual void update(const float dt) {}
+protected:
+	Input last_input_;
+	void clear_input() { last_input_ = {}; }
 };
