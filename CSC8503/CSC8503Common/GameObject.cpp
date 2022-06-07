@@ -1,6 +1,6 @@
 #include "GameObject.h"
 #include "CollisionDetection.h"
-
+#include "../../CSC8599Common/EventSystem.h"
 using namespace NCL::CSC8503;
 
 GameObject::GameObject(string objectName)	{
@@ -12,6 +12,7 @@ GameObject::GameObject(string objectName)	{
 
 	renderObject = nullptr;
 	layers = Default;
+	register_handlers();
 }
 
 GameObject::~GameObject()	{
@@ -45,4 +46,16 @@ void GameObject::UpdateBroadphaseAABB() {//Òª°ÑÆäËûÀàÐÍµÄÅö×²Ìå×ª»»ÎªAABBÀàÐÍµÄÅ
 		Vector3 halfSizes = ((OBBVolume&)*boundingVolume).GetHalfDimensions();
 		broadphaseAABB = mat * halfSizes;
 	}
+}
+
+void GameObject::register_handlers()
+{
+	EventSystem::Get()->RegisterEventHandler("ThreatChanged", [this](EVENT* p_event)->void
+	{
+			int id = stoi(p_event->vArg[0]);
+			if (id == GetWorldID())
+				GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+			else
+				GetRenderObject()->SetColour(Vector4(0, 0, 0, 0));
+	});
 }

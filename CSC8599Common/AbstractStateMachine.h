@@ -1,5 +1,6 @@
 #pragma once
 #include "AbstractComponent.h"
+#include <map>
 namespace NCL {
 	namespace CSC8599 {
 		using ContainerIterator = std::map<std::string, AbstractComponent*>::iterator;

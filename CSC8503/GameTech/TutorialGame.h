@@ -2,6 +2,7 @@
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "StateGameObject.h"
+#include "../../CSC8599Common/EventSystem.h"
 /*
 我们的任务是保证在物体渲染前相机移动、物理计算都是正确的。这个类的设计目的就是为了具体的游戏逻辑。作业会是这个类的子类
 */
@@ -80,6 +81,8 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
+			//EventSystem
+			EventSystem* event_system_ = nullptr;
 
 		};
 	}

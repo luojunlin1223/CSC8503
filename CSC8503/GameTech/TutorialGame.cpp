@@ -22,6 +22,7 @@ TutorialGame::TutorialGame() {
 	inSelectionMode = false;
 
 	Debug::SetRenderer(renderer);
+	event_system_ = new EventSystem();
 
 	InitialiseAssets();
 }
@@ -112,6 +113,8 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 
 	world->UpdateWorld(dt);
+	//
+	event_system_->Update(dt);
 	renderer->Update(dt);
 
 	Debug::FlushRenderables(dt);

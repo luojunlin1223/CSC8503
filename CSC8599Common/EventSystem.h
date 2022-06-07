@@ -1,6 +1,7 @@
 #pragma once
 #include "AbstractStateMachine.h"
-
+#include <list>
+#include <functional>
 namespace NCL
 {
 	namespace CSC8503
