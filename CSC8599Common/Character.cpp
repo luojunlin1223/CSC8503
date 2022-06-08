@@ -25,7 +25,7 @@ void NCL::CSC8599::Character::update(float dt)
 std::string NCL::CSC8599::Character::print()
 {
 	std::string buffer;
-	buffer += "Health:" + std::string(get_attr("health")._string) + "\n";
+	buffer += "Health:" + std::to_string(get_attr("health")._int) + "\n";
 	buffer += state_machine_->Print(0);
 	return buffer;
 }
@@ -58,6 +58,24 @@ bool Character::switch_nearest_target()
 	return true;
 }
 
+void Character::UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix)
+{
+	const float height = 5.f;
+	Matrix4 local = GetTransform().GetMatrix();
+	local.SetPositionVector({ 0, 0, 0 });
+
+	Vector3 up = local * Vector4(0, 1, 0, 1.0f);
+	Vector3 left = local * Vector4(-1, 0, 0, 1.0f);
+	Vector3 worldPos = GetTransform().GetPosition();
+	Vector3 clip = projectMatrix*viewMatrix*worldPos;
+	Vector3 canvas;
+	std::string text = name;
+	canvas.x = (clip.x + 2.0f)*25.0f-1.0f*text.size();
+	canvas.y = (1.0f - clip.y)*50.0f-height;
+	Debug::Print(text, canvas
+	);
+}
+
 data NCL::CSC8599::Character::get_attr(const std::string& attr_name)
 {
 	const auto result = attrs_.find(attr_name);
@@ -76,7 +94,11 @@ void NCL::CSC8599::Character::init_attrs()
 	document.ParseStream(isw);
 	for (rapidjson::Document::ConstMemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr)
 	{
-		if (itr->value.IsString())attrs_[itr->name.GetString()]._string = itr->value.GetString();
+		if (itr->value.IsString())
+		{
+			const char* source = itr->value.GetString();
+			name = std::string(source);
+		}
 		if (itr->value.IsInt())attrs_[itr->name.GetString()]._int = itr->value.GetInt();
 		if (itr->value.IsFloat())attrs_[itr->name.GetString()]._float = itr->value.GetFloat();
 		if (itr->value.IsBool())attrs_[itr->name.GetString()]._bool = itr->value.GetBool();

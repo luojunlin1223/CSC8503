@@ -56,6 +56,6 @@ void GameObject::register_handlers()
 			if (id == GetWorldID())
 				GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
 			else
-				GetRenderObject()->SetColour(Vector4(0, 0, 0, 0));
+				GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
 	});
 }

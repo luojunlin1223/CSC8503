@@ -14,6 +14,7 @@ void Monster::get_damage(const int source_id, const int damage)
 	ThreatMap[source_id] += 1;
 }
 
+
 void Monster::attack_update()
 {
 	const auto i = max_element(ThreatMap.begin(), ThreatMap.end(), cmp_value);

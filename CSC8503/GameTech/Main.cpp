@@ -234,9 +234,9 @@ int main() {
 
 	TutorialGame* g = new TutorialGame();
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
-	TestStateMachine();
-	TestPathfinding();
-	TestBehaviourTree();
+	//TestStateMachine();
+	//TestPathfinding();
+	//TestBehaviourTree();
 	//TestPushdownAutomata(w);
 
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
@@ -260,7 +260,7 @@ int main() {
 
 		g->UpdateGame(dt);
 		
-		DisplayPathfinding();
+		//DisplayPathfinding();
 	}
 	Window::DestroyGameWindow();
 }

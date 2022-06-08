@@ -72,6 +72,7 @@ void GameWorld::UpdateWorld(float dt) {
 	for(const auto i:gameObjects)
 	{
 		i->update(dt);
+		i->UI_update(mainCamera->BuildViewMatrix(),mainCamera->BuildProjectionMatrix());
 	}
 }
 

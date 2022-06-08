@@ -9,7 +9,6 @@ namespace NCL {
 		{
 			int _int;
 			float _float;
-			const char* _string;
 			bool _bool;
 		};
 		class Pet;
@@ -25,6 +24,7 @@ namespace NCL {
 			virtual void get_damage(const int source_id,const int damage);
 			bool switch_target(const int target_id);
 			bool switch_nearest_target();
+			void UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix) override;
 		protected:
 			StateMachine* state_machine_;
 			std::map<std::string, data> attrs_;
