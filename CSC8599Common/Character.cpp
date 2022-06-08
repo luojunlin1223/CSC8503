@@ -12,7 +12,6 @@ NCL::CSC8599::Character::Character()
 	pet(nullptr),
 	user_controller_(new UserController())
 {
-	init_attrs();
 	init_state_machine();
 }
 void NCL::CSC8599::Character::update(float dt)
@@ -86,9 +85,9 @@ void NCL::CSC8599::Character::set_attr(const std::string& attr_name,const data d
 {
 	attrs_[attr_name] = data;
 }
-void NCL::CSC8599::Character::init_attrs()
+void NCL::CSC8599::Character::init_attrs(const std::string& attr_file_name)
 {
-	std::ifstream t(NCL::Assets::DATADIR + "character.json");
+	std::ifstream t(NCL::Assets::DATADIR + attr_file_name);
 	rapidjson::IStreamWrapper isw(t);
 	rapidjson::Document document;
 	document.ParseStream(isw);

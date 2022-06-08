@@ -31,7 +31,7 @@ namespace NCL {
 			UserController* user_controller_;
 			GameObject* target;
 			GameObject* pet;
-			void init_attrs();
+			void init_attrs(const std::string& attr_file_name);
 			void init_state_machine();
 
 			virtual bool attack_to_prepare();

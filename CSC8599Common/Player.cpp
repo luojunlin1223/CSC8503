@@ -5,6 +5,7 @@
 NCL::CSC8599::Player::Player()
 {
 	user_controller_ = new PlayerController();
+	init_attrs("character.json");
 }
 
 void NCL::CSC8599::Player::move_update()
