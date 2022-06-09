@@ -15,6 +15,7 @@ namespace NCL {
 				if (func != nullptr)
 					func();
 			}
+			void GetActiveCompoentArr(std::vector<std::string>& arr) override{};
 			std::string Print(int index)override;
 		protected:
 			StateUpdateFunction func;

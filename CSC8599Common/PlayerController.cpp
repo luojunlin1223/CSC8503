@@ -1,10 +1,5 @@
-#include "pch.h"
 #include "PlayerController.h"
 #include "../Common/Window.h"
-Input NCL::CSC8599::PlayerController::get_inputs()
-{
-	return last_input_;
-}
 
 void NCL::CSC8599::PlayerController::update(const float dt)
 {
@@ -14,7 +9,8 @@ void NCL::CSC8599::PlayerController::update(const float dt)
 	if (keyboard->KeyHeld(KeyboardKeys::RIGHT)) last_input_.movement_direction = Vector2(1, 0);
 	if (keyboard->KeyHeld(KeyboardKeys::UP)) last_input_.movement_direction = Vector2(0, 1);
 	if (keyboard->KeyHeld(KeyboardKeys::DOWN)) last_input_.movement_direction = Vector2(0, -1);
-	if (keyboard->KeyHeld(KeyboardKeys::A)) last_input_.buttons[ATTACK] = true;
-	if (keyboard->KeyHeld(KeyboardKeys::S)) last_input_.buttons[STOP] = true;
-	if (keyboard->KeyHeld(KeyboardKeys::TAB)) last_input_.buttons[SWITCH_TARGET] = true;
+	if (keyboard->KeyPressed(KeyboardKeys::Z)) last_input_.buttons[ATTACK] = true;
+	if (keyboard->KeyPressed(KeyboardKeys::X)) last_input_.buttons[STOP] = true;
+	if (keyboard->KeyPressed(KeyboardKeys::TAB)) last_input_.buttons[SWITCH_TARGET] = true;
+	if (keyboard->KeyPressed(KeyboardKeys::C)) last_input_.buttons[SWITCH_PET_MODEL] = true;
 }

@@ -7,6 +7,7 @@
 #include "../CSC8503Common/PositionConstraint.h"
 #include "../../CSC8599Common/Player.h"
 #include "../../CSC8599Common/Monster.h"
+#include "../../CSC8599Common/Pet.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -123,6 +124,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
+		event_system_->Reset();
 		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
@@ -257,7 +259,7 @@ void TutorialGame::InitWorld() {
 	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	InitGameExamples();
 	InitDefaultFloor();
-	testStateObject = AddStateObjectToWorld(Vector3(10, 10, 5));
+	//testStateObject = AddStateObjectToWorld(Vector3(10, 10, 5));
 }
 
 void TutorialGame::BridgeConstraintTest() {
@@ -428,9 +430,11 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 5, 0));
-	AddMonsterToWorld(Vector3(5, 5, 0));
-	AddBonusToWorld(Vector3(10, 5, 0));
+	auto player=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
+	AddMonsterToWorld(Vector3(-5, 5, 0));
+	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), player));
+	player->set_pet(pet);
+	//AddBonusToWorld(Vector3(10, 5, 0));
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
@@ -455,7 +459,6 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	else {
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMeshB, nullptr, basicShader));
 	}
-	character->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
@@ -491,6 +494,27 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 	world->AddGameObject(character);
 
 	return character;
+}
+
+GameObject* TutorialGame::AddPetToWorld(const Vector3& position, Character* owner)
+{
+	auto pet = new Pet(owner);
+
+	SphereVolume* volume = new SphereVolume(0.25f);
+	pet->SetBoundingVolume((CollisionVolume*)volume);
+	pet->GetTransform()
+		.SetScale(Vector3(0.25, 0.25, 0.25))
+		.SetPosition(position);
+
+	pet->SetRenderObject(new RenderObject(&pet->GetTransform(), bonusMesh, nullptr, basicShader));
+	pet->SetPhysicsObject(new PhysicsObject(&pet->GetTransform(), pet->GetBoundingVolume()));
+
+	pet->GetPhysicsObject()->SetInverseMass(1.0f);
+	pet->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(pet);
+
+	return pet;
 }
 
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {

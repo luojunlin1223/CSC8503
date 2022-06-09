@@ -98,8 +98,8 @@ namespace NCL {
 			Vector3 broadphaseAABB;
 
 			Layers layers;//游戏物体属于什么layer
-		private:
 			void register_handlers();
+			
 		};
 	}
 }

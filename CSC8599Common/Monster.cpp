@@ -2,11 +2,14 @@
 #include "Monster.h"
 #include "EventSystem.h"
 #include "../CSC8503/CSC8503Common/GameWorld.h"
+Monster::Monster()
+{
+	init_attrs("monster.json");
+}
 bool cmp_value(const std::pair<int, int> left, const std::pair<int, int> right)
 {
 	return left.second < right.second;
 }
-
 
 void Monster::get_damage(const int source_id, const int damage)
 {
@@ -15,10 +18,17 @@ void Monster::get_damage(const int source_id, const int damage)
 }
 
 
+
 void Monster::attack_update()
 {
 	const auto i = max_element(ThreatMap.begin(), ThreatMap.end(), cmp_value);
-	if (!switch_target(i->first))return;
-	EventSystem::Get()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
+	switch_target(i->first);
 	Character::attack_update();
+}
+
+
+
+bool Monster::prepare_to_attack()
+{
+	return !ThreatMap.empty();
 }

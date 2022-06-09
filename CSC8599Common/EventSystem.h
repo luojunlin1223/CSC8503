@@ -32,6 +32,7 @@ namespace NCL {
 			~EventSystem() override = default;
 			void Update(float dt) override;
 			std::string Print(int index) override;
+			void GetActiveCompoentArr(std::vector<std::string>& arr) override{}
 			void RegisterEventHandler(const std::string&, const std::function<void(EVENT*)>&);
 			void PushEvent(const std::string&, int n, ...);
 			static EventSystem* Get() {
@@ -39,6 +40,7 @@ namespace NCL {
 			}
 			static EventSystem* p_self;
 			EVENT* HasHappened(const std::string&);
+			void Reset();
 		private:
 			void init();
 			EventDefContainer eventDefContainer;

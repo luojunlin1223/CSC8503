@@ -63,6 +63,9 @@
     <ClInclude Include="PlayerController.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="PetController.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -102,6 +105,9 @@
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PetController.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>

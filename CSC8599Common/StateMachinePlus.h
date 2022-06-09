@@ -9,6 +9,7 @@ namespace NCL {
 			~StateMachinePlus() override = default;
 			void Update(float dt) override;
 			std::string Print(int index) override;
+			void GetActiveCompoentArr(std::vector<std::string>& arr) override;
 		};
 	}
 }

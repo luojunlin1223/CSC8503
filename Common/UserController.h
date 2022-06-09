@@ -6,6 +6,7 @@ enum Buttons
 	STOP,
 	PAUSE,
 	SWITCH_TARGET,
+	SWITCH_PET_MODEL,
 	MAX_INPUT
 };
 
@@ -26,7 +27,7 @@ public:
 	UserController& operator=(const UserController&&) = delete;
 
 	virtual ~UserController() = default;
-	virtual Input get_inputs() { return {}; }
+	Input get_inputs() { return last_input_; }
 	virtual void update(const float dt) {}
 protected:
 	Input last_input_;

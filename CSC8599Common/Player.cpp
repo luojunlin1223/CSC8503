@@ -2,10 +2,12 @@
 #include "Player.h"
 #include "PlayerController.h"
 #include "../CSC8503/CSC8503Common/Debug.h"
+#include "EventSystem.h"
+#include "Pet.h"
 NCL::CSC8599::Player::Player()
 {
 	user_controller_ = new PlayerController();
-	init_attrs("character.json");
+	init_attrs("player.json");
 }
 
 void NCL::CSC8599::Player::move_update()
@@ -22,11 +24,25 @@ void NCL::CSC8599::Player::move_update()
 		GetTransform().SetPosition(origin + Vector3(0, 0, 1));
 }
 
-
 void NCL::CSC8599::Player::update(float dt)
 {
 	Character::update(dt);
 	if (user_controller_->get_inputs().buttons[SWITCH_TARGET])
 		switch_nearest_target();
+	if (target)
+		target->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
+	if (user_controller_->get_inputs().buttons[SWITCH_PET_MODEL])
+	{
+		const auto temp = dynamic_cast<Pet*>(pet);
+		if(static_cast<int>(temp->get_model())+1== static_cast<int>(ControlModelType::MAX))
+		{
+			temp->set_model(static_cast<ControlModelType>(0));
+		}
+		else
+		{
+			temp->set_model(static_cast<ControlModelType>(static_cast<int>(temp->get_model())+1));
+		}
+	}
+
 }
 

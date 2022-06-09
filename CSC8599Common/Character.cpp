@@ -6,10 +6,10 @@
 #include "EventSystem.h"
 #include "StateTransition.h"
 #include "../CSC8503/CSC8503Common/GameWorld.h"
+
 NCL::CSC8599::Character::Character()
 	:state_machine_(nullptr),
 	target(nullptr),
-	pet(nullptr),
 	user_controller_(new UserController())
 {
 	init_state_machine();
@@ -18,8 +18,6 @@ void NCL::CSC8599::Character::update(float dt)
 {
 	user_controller_->update(dt);
 	state_machine_->Update(dt);
-	if (target)
-		target->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
 }
 std::string NCL::CSC8599::Character::print()
 {
@@ -36,13 +34,14 @@ void NCL::CSC8599::Character::get_damage(const int source_id,const int damage)
 	health = health - damage <= 0 ? 0 : health - damage;
 	data._int = health;
 	set_attr("health", data);
-	EventSystem::Get()->PushEvent("GetDamage", 1, std::to_string(worldID).c_str());
+	EventSystem::Get()->PushEvent("GetDamage", 2, std::to_string(source_id).c_str(),std::to_string(worldID).c_str());
 }
 
 bool Character::switch_target(const int target_id)
 {
 	const auto temp=GameWorld::Get()->find_game_object(target_id);
 	if (!temp)return false;
+	if (target && target->GetWorldID() == temp->GetWorldID())return false;
 	target = temp;
 	EventSystem::Get()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
 	return true;
@@ -59,20 +58,8 @@ bool Character::switch_nearest_target()
 
 void Character::UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix)
 {
-	const float height = 5.f;
-	Matrix4 local = GetTransform().GetMatrix();
-	local.SetPositionVector({ 0, 0, 0 });
-
-	Vector3 up = local * Vector4(0, 1, 0, 1.0f);
-	Vector3 left = local * Vector4(-1, 0, 0, 1.0f);
-	Vector3 worldPos = GetTransform().GetPosition();
-	Vector3 clip = projectMatrix*viewMatrix*worldPos;
-	Vector3 canvas;
-	std::string text = name;
-	canvas.x = (clip.x + 2.0f)*25.0f-1.0f*text.size();
-	canvas.y = (1.0f - clip.y)*50.0f-height;
-	Debug::Print(text, canvas
-	);
+	showHUD(viewMatrix,projectMatrix,name,5.f);
+	showHUD(viewMatrix, projectMatrix, std::to_string(get_attr("health")._int), 7.f);
 }
 
 data NCL::CSC8599::Character::get_attr(const std::string& attr_name)
@@ -139,6 +126,21 @@ void NCL::CSC8599::Character::init_state_machine()
 		[this](EVENT* event)->bool {return alive_to_dead(); }, ""));
 }
 
+void Character::showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix, std::string text, const float height)
+{
+	Matrix4 local = GetTransform().GetMatrix();
+	local.SetPositionVector({ 0, 0, 0 });
+
+	Vector3 up = local * Vector4(0, 1, 0, 1.0f);
+	Vector3 left = local * Vector4(-1, 0, 0, 1.0f);
+	Vector3 worldPos = GetTransform().GetPosition();
+	Vector3 clip = projectMatrix * viewMatrix * worldPos;
+	Vector2 canvas;
+	canvas.x = (clip.x + 2.0f) * 25.0f - 1.0f * text.size();
+	canvas.y = (1.0f - clip.y) * 50.0f - height;
+	Debug::Print(text, canvas);
+}
+
 bool NCL::CSC8599::Character::attack_to_prepare()
 {
 	if (!target)return false;
@@ -146,7 +148,7 @@ bool NCL::CSC8599::Character::attack_to_prepare()
 	if (!_target)return false;
 	const auto health = _target->get_attr("health")._int;
 	const auto input = user_controller_->get_inputs();
-	return health == 0 && input.buttons[STOP];
+	return health == 0 || input.buttons[STOP];
 }
 
 bool Character::prepare_to_attack()
@@ -156,15 +158,12 @@ bool Character::prepare_to_attack()
 	if (!_target)return false;
 	const auto health = _target->get_attr("health")._int;
 	const auto input = user_controller_->get_inputs();
-	return health == 0 && input.buttons[ATTACK];
+	return health != 0 && input.buttons[ATTACK];
 }
 
 bool Character::alive_to_dead()
 {
-	if (!target)return false;
-	const auto _target = dynamic_cast<Character*>(target);
-	if (!_target)return false;
-	return _target->get_attr("health")._int==0;
+	return get_attr("health")._int==0;
 }
 
 bool Character::move_to_stand()

@@ -65,6 +65,15 @@ EVENT* NCL::CSC8599::EventSystem::HasHappened(const std::string& name)
 	return nullptr;
 }
 
+void EventSystem::Reset()
+{
+	for(auto i:eventDefContainer)
+	{
+		i.second->listFunc.clear();
+	}
+	init();
+}
+
 void NCL::CSC8599::EventSystem::init()
 {
 	int nEventNum = sizeof(g_Events) / sizeof(EVENT_DEFINE);

@@ -7,10 +7,20 @@ namespace NCL {
 		{
 		public:
 			Player();
+			void update(float dt) override;
 		private:
 			void move_update() override;
+			Character* pet=nullptr;
 		public:
-			void update(float dt) override;
+			Character* get_pet() const
+			{
+				return pet;
+			}
+
+			void set_pet(Character* _pet)
+			{
+				this->pet = _pet;
+			}
 		};
 	}
 }

@@ -40,3 +40,15 @@ std::string NCL::CSC8599::StateMachine::Print(int index)
 void NCL::CSC8599::StateMachine::AddTransition(StateTransition* t) {
 	allTransitions.insert(std::make_pair(t->GetSourceState(), t));
 }
+
+void StateMachine::GetActiveCompoentArr(std::vector<std::string>& arr)
+{
+	for (auto& it : ComponentContainer)
+	{
+		if (it.second == activeComponent)
+		{
+			arr.emplace_back(it.first);
+		}
+		it.second->GetActiveCompoentArr(arr);
+	}
+}
