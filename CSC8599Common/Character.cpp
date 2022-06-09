@@ -181,6 +181,7 @@ void Character::attack_update()
 	if (!target)return;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return;
+	if (_target->get_attr("health")._int == 0)return;
 	_target->get_damage(GetWorldID(),1);
 }
 
