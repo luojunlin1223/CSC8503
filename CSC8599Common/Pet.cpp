@@ -58,8 +58,8 @@ bool Pet::attack_to_prepare()
 	std::vector<std::string> arr;
 	owner->get_state_machine()->GetActiveCompoentArr(arr);
 	if (model == ControlModelType::PASSIVE)return user_controller_->get_inputs().buttons[STOP];
-	if (model == ControlModelType::ASSIST)return std::find(arr.begin(), arr.end(), "stop") != arr.end();
-	if (model == ControlModelType::PROTECT)return std::find(arr.begin(), arr.end(), "stop") != arr.end();
+	if (model == ControlModelType::ASSIST)return std::find(arr.begin(), arr.end(), "prepare") != arr.end();
+	if (model == ControlModelType::PROTECT)return std::find(arr.begin(), arr.end(), "prepare") != arr.end();
 	return false;
 }
 
