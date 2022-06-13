@@ -1,7 +1,7 @@
 ## <div align="center">Preview</div>
+## <div align="center">DECLARE-based parallel hierarchical state machine
+for computer games</div>
 ![WoWScrnShot_060722_220452](https://user-images.githubusercontent.com/63366848/173457967-c6d744a4-93a5-4da9-8772-692cb3a83a86.jpg)
-DECLARE-based parallel hierarchical state machine
-for computer games
 ## <div align="center">Information</div>
 
 <details><summary>The list of keys</summary>
