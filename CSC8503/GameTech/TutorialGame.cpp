@@ -162,6 +162,9 @@ void TutorialGame::UpdateKeys() {
 	else {
 		DebugObjectMovement();
 	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F3)) {
+		std::cout<<event_system_->Print(0)<<std::endl;
+	}
 }
 
 void TutorialGame::LockedObjectMovement() {

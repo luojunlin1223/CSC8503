@@ -12,7 +12,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 	init_attrs("pet.json");
 	user_controller_ = new PetController();
 	init();
-	EventSystem::Get()->RegisterEventHandler("GetDamage", [this](EVENT* p_event)->void
+	EventSystem::Get()->RegisterEventHandler("OnHit", [this](EVENT* p_event)->void
 		{
 			const int source = stoi(p_event->vArg[0]);
 			const int id = stoi(p_event->vArg[1]);
@@ -57,15 +57,16 @@ bool Pet::attack_to_prepare()
 {
 	std::vector<std::string> arr;
 	owner->get_state_machine()->GetActiveCompoentArr(arr);
-	if (model == ControlModelType::PASSIVE)return user_controller_->get_inputs().buttons[STOP];
+	auto _target = dynamic_cast<Character*> (target);
+	if (model == ControlModelType::PASSIVE)return !_target->isAlive()||user_controller_->get_inputs().buttons[STOP];
 	if (model == ControlModelType::ASSIST)return std::find(arr.begin(), arr.end(), "prepare") != arr.end();
-	if (model == ControlModelType::PROTECT)return std::find(arr.begin(), arr.end(), "prepare") != arr.end();
+	if (model == ControlModelType::PROTECT)return !_target->isAlive()||user_controller_->get_inputs().buttons[STOP];
 	return false;
 }
 
 bool Pet::prepare_to_attack()
 {
-	if (!target)return false;
+	TARGET_EXIST false;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return false;
 	const auto health = _target->get_attr("health")._int;
@@ -78,6 +79,13 @@ bool Pet::prepare_to_attack()
 	if (model == ControlModelType::ASSIST)return std::find(arr.begin(), arr.end(), "attack") != arr.end();
 	if (model == ControlModelType::PROTECT)return false;
 	return false;
+}
+
+bool Pet::alive_to_dead()
+{
+	const auto result = Character::alive_to_dead();
+	if(result)EventSystem::Get()->PushEvent("PetDie", 1, std::to_string(GetWorldID()).c_str());
+	return result;
 }
 
 bool Pet::move_to_stand()
@@ -94,7 +102,7 @@ bool Pet::stand_to_move()
 	return std::find(arr.begin(),arr.end(),"move")!=arr.end();
 }
 
-void Pet::move_update()
+void Pet::move_update(float dt)
 {
 	const float distance = (owner->GetTransform().GetPosition() - GetTransform().GetPosition()).Length();
 	if (distance <= 10.0f)return;
@@ -107,7 +115,7 @@ void Pet::move_update()
 void Pet::init()
 {
 	auto actions = (StateMachine*)state_machine_->GetComponent("actions");
-	auto taunt = new State([]()->void { printf("im taunt\n"); });
+	auto taunt = new State([](float dt)->void { printf("im taunt\n"); });
 	auto attack = state_machine_->GetComponent("attack");
 	actions->AddComponent("taunt", taunt);
 	actions->AddTransition(new StateTransition(attack, taunt, [this](EVENT* event)->bool {return attack_to_taunt(); }, ""));

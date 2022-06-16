@@ -22,9 +22,10 @@ namespace NCL {
 			bool attack_to_prepare() override;
 		protected:
 			bool prepare_to_attack() override;
+			bool alive_to_dead() override;
 			bool move_to_stand() override;
 			bool stand_to_move() override;
-			void move_update() override;
+			void move_update(float dt) override;
 		public:
 			ControlModelType get_model() const
 			{

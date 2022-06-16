@@ -2,6 +2,7 @@
 #include "../CSC8503/CSC8503Common/GameObject.h";
 #include "../Common/UserController.h"
 #include "StateMachine.h"
+#define TARGET_EXIST if(!target)return
 using namespace NCL::CSC8503;
 namespace NCL {
 	namespace CSC8599 {
@@ -27,11 +28,13 @@ namespace NCL {
 			void UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix) override;
 			StateMachine* get_state_machine()const { return state_machine_; }
 			GameObject* get_target()const { return target; }
+			bool isAlive();
 		protected:
 			StateMachine* state_machine_;
 			std::map<std::string, data> attrs_;
 			UserController* user_controller_;
 			GameObject* target;
+			float attack_time = 0.f;
 			void init_attrs(const std::string& attr_file_name);
 			void init_state_machine();
 			void showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix,std::string text,const float height);
@@ -41,11 +44,12 @@ namespace NCL {
 			virtual bool move_to_stand();
 			virtual bool stand_to_move();
 
-			virtual void attack_update();
-			virtual void prepare_update();
-			virtual void move_update();
-			virtual void stand_update();
-			virtual void dead_update();
+			virtual void attack_update(float dt);
+			virtual void prepare_update(float dt);
+			virtual void move_update(float dt);
+			virtual void stand_update(float dt);
+			virtual void dead_update(float dt);
+
 		};
 	}
 }

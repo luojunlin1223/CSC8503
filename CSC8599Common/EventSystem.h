@@ -45,7 +45,7 @@ namespace NCL {
 			void init();
 			EventDefContainer eventDefContainer;
 			std::list<EVENT*> eventQueue;
-			std::vector<std::string> eventRecords;
+			std::vector<EVENT*> eventRecords;
 		};
 	}
 }

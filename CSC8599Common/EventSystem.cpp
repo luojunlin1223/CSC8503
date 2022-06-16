@@ -3,10 +3,11 @@
 EventSystem* EventSystem::p_self = nullptr;
 extern EVENT_DEFINE g_Events[] =
 {
-		{"test"},
-		{"test2"},
 		{"ThreatChanged"},
-		{"GetDamage"}
+		{"OnHit"},
+		{"PlayerDie"},
+		{"PetDie"},
+		{"MonsterDie"}
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {
@@ -31,7 +32,12 @@ std::string NCL::CSC8599::EventSystem::Print(int index)
 	std::string buffer;
 	buffer += "Event Records:";
 	for (auto i : eventRecords) {
-		buffer += "[" + i + "]";
+		buffer += "[" + i->pEventDef->name + "]";
+		for (auto j : i->vArg)
+		{
+			buffer += "("+j + ")";
+		}
+		buffer += "\n";
 	}
 	return buffer;
 }
@@ -53,7 +59,7 @@ void NCL::CSC8599::EventSystem::PushEvent(const std::string& name, int n, ...)
 	va_end(args);
 
 	eventQueue.emplace_back(event);
-	eventRecords.emplace_back(event->pEventDef->name);
+	eventRecords.emplace_back(event);
 }
 
 EVENT* NCL::CSC8599::EventSystem::HasHappened(const std::string& name)

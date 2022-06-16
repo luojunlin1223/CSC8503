@@ -10,7 +10,7 @@ NCL::CSC8599::Player::Player()
 	init_attrs("player.json");
 }
 
-void NCL::CSC8599::Player::move_update()
+void NCL::CSC8599::Player::move_update(float dt)
 {
 	const auto input=user_controller_->get_inputs();
 	const auto origin = GetTransform().GetPosition();
@@ -22,6 +22,13 @@ void NCL::CSC8599::Player::move_update()
 		GetTransform().SetPosition(origin + Vector3(0, 0, -1));
 	if (input.movement_direction == Vector2(0, -1))
 		GetTransform().SetPosition(origin + Vector3(0, 0, 1));
+}
+
+bool NCL::CSC8599::Player::alive_to_dead()
+{
+	const auto result = Character::alive_to_dead();
+	if (result)EventSystem::Get()->PushEvent("PlayerDie", 1, std::to_string(GetWorldID()).c_str());
+	return result;
 }
 
 void NCL::CSC8599::Player::update(float dt)

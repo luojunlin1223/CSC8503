@@ -3,7 +3,7 @@
 using namespace NCL::CSC8599;
 namespace NCL {
 	namespace CSC8599 {
-		using  StateUpdateFunction = std::function<void()>;
+		using  StateUpdateFunction = std::function<void(float)>;
 		class State :public AbstractComponent
 		{
 		public:
@@ -13,7 +13,7 @@ namespace NCL {
 			~State()override = default;
 			void Update(float dt) override {
 				if (func != nullptr)
-					func();
+					func(dt);
 			}
 			void GetActiveCompoentArr(std::vector<std::string>& arr) override{};
 			std::string Print(int index)override;

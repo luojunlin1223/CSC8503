@@ -34,7 +34,7 @@ void NCL::CSC8599::Character::get_damage(const int source_id,const int damage)
 	health = health - damage <= 0 ? 0 : health - damage;
 	data._int = health;
 	set_attr("health", data);
-	EventSystem::Get()->PushEvent("GetDamage", 2, std::to_string(source_id).c_str(),std::to_string(worldID).c_str());
+	EventSystem::Get()->PushEvent("OnHit", 2, std::to_string(source_id).c_str(),std::to_string(worldID).c_str());
 }
 
 bool Character::switch_target(const int target_id)
@@ -60,6 +60,11 @@ void Character::UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix
 {
 	showHUD(viewMatrix,projectMatrix,name,5.f);
 	showHUD(viewMatrix, projectMatrix, std::to_string(get_attr("health")._int), 7.f);
+}
+
+bool Character::isAlive()
+{
+	return get_attr("health")._int>0;
 }
 
 data NCL::CSC8599::Character::get_attr(const std::string& attr_name)
@@ -93,8 +98,8 @@ void NCL::CSC8599::Character::init_attrs(const std::string& attr_file_name)
 
 void NCL::CSC8599::Character::init_state_machine()
 {
-	const auto attack = new State([this]()->void { return attack_update(); });
-	const auto prepare = new State([this]()->void { return prepare_update(); });
+	const auto attack = new State([this](float dt)->void { return attack_update(dt); });
+	const auto prepare = new State([this](float dt)->void { return prepare_update(dt); });
 
 	const auto actions = new StateMachine("prepare", prepare);
 	actions->AddComponent("attack", attack);
@@ -103,8 +108,8 @@ void NCL::CSC8599::Character::init_state_machine()
 	actions->AddTransition(new StateTransition(prepare, attack,
 		[this](EVENT* event)->bool {return prepare_to_attack(); }, ""));
 
-	const auto move = new State([this]()->void { return move_update(); });
-	const auto stand = new State([this]()->void { return stand_update(); });
+	const auto move = new State([this](float dt)->void { return move_update(dt); });
+	const auto stand = new State([this](float dt)->void { return stand_update(dt); });
 	const auto movement = new StateMachine("stand", stand);
 	movement->AddComponent("move", move);
 	movement->AddTransition(new StateTransition(move, stand,
@@ -119,7 +124,7 @@ void NCL::CSC8599::Character::init_state_machine()
 	const auto alive = new StateMachinePlus;
 	alive->AddComponent("model", model);
 
-	const auto dead = new State([this]()->void { return dead_update(); });
+	const auto dead = new State([this](float dt)->void { return dead_update(dt); });
 	state_machine_ = new StateMachine("alive", alive);
 	state_machine_->AddComponent("dead", dead);
 	state_machine_->AddTransition(new StateTransition(alive, dead,
@@ -143,27 +148,23 @@ void Character::showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix, 
 
 bool NCL::CSC8599::Character::attack_to_prepare()
 {
-	if (!target)return false;
+	TARGET_EXIST false;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return false;
-	const auto health = _target->get_attr("health")._int;
-	const auto input = user_controller_->get_inputs();
-	return health == 0 || input.buttons[STOP];
+	return  !_target->isAlive()|| user_controller_->get_inputs().buttons[STOP];
 }
 
 bool Character::prepare_to_attack()
 {
-	if (!target)return false;
+	TARGET_EXIST false;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return false;
-	const auto health = _target->get_attr("health")._int;
-	const auto input = user_controller_->get_inputs();
-	return health != 0 && input.buttons[ATTACK];
+	return _target->isAlive() && user_controller_->get_inputs().buttons[ATTACK];
 }
 
 bool Character::alive_to_dead()
 {
-	return get_attr("health")._int==0;
+	return !isAlive();
 }
 
 bool Character::move_to_stand()
@@ -176,27 +177,30 @@ bool Character::stand_to_move()
 	return user_controller_->get_inputs().movement_direction!=Vector2();
 }
 
-void Character::attack_update()
+void Character::attack_update(float dt)
 {
-	if (!target)return;
+	TARGET_EXIST;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return;
-	if (_target->get_attr("health")._int == 0)return;
-	_target->get_damage(GetWorldID(),1);
+	if (!_target->isAlive())return;
+	attack_time += dt;
+	if (attack_time <= 0.1f)return;
+	attack_time = 0.0f;
+	_target->get_damage(GetWorldID(), 1);
 }
 
-void Character::prepare_update()
+void Character::prepare_update(float dt)
 {
 }
 
-void Character::move_update()
+void Character::move_update(float dt)
 {
 }
 
-void Character::stand_update()
+void Character::stand_update(float dt)
 {
 }
 
-void Character::dead_update()
+void Character::dead_update(float dt)
 {
 }

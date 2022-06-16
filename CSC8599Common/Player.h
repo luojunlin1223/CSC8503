@@ -9,8 +9,10 @@ namespace NCL {
 			Player();
 			void update(float dt) override;
 		private:
-			void move_update() override;
+			void move_update(float dt) override;
 			Character* pet=nullptr;
+		protected:
+			bool alive_to_dead() override;
 		public:
 			Character* get_pet() const
 			{
