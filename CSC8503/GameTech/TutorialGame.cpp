@@ -24,7 +24,7 @@ TutorialGame::TutorialGame() {
 
 	Debug::SetRenderer(renderer);
 	event_system_ = new EventSystem();
-
+	debug_state_machine = new DebugStateMachine();
 	InitialiseAssets();
 }
 
@@ -115,7 +115,9 @@ void TutorialGame::UpdateGame(float dt) {
 
 	world->UpdateWorld(dt);
 	//
+	debug_state_machine->Update(dt);
 	event_system_->Update(dt);
+
 	renderer->Update(dt);
 
 	Debug::FlushRenderables(dt);

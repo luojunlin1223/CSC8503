@@ -8,6 +8,7 @@ namespace NCL {
 		public:
 			Monster();
 			void get_damage(const int source_id, const int damage) override;
+			void get_taunt(const int source_id);
 		private:
 			void attack_update(float dt) override;
 			std::map<int,int> ThreatMap;

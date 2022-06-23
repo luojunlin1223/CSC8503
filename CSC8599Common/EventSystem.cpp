@@ -5,8 +5,10 @@ extern EVENT_DEFINE g_Events[] =
 {
 		{"ThreatChanged"},
 		{"OnHit"},
+		{"PlayerOverThreat"},
 		{"PlayerDie"},
 		{"PetDie"},
+		{"PetTaunt"},
 		{"MonsterDie"}
 };
 NCL::CSC8599::EventSystem::EventSystem()
@@ -17,12 +19,22 @@ NCL::CSC8599::EventSystem::EventSystem()
 
 void NCL::CSC8599::EventSystem::Update(float dt)
 {
-	for (auto& event : eventQueue)
+	std::list<EVENT*>::iterator it;
+	for (it = eventQueue.begin(); it != eventQueue.end(); it++)
 	{
-		for (auto func = event->pEventDef->listFunc.begin(); func != event->pEventDef->listFunc.end(); func++)
+		auto event = *it;
+		bool bMultiPushed = false;
+		for (auto itPrev = eventQueue.begin(); itPrev != it; itPrev++)
 		{
-			(*func)(event);
+			if (*itPrev == *it)
+			{
+				bMultiPushed = true;
+				break;
+			}
 		}
+
+		if (bMultiPushed) continue;
+		processEvent(*event);
 	}
 	eventQueue.clear();
 }
@@ -30,7 +42,7 @@ void NCL::CSC8599::EventSystem::Update(float dt)
 std::string NCL::CSC8599::EventSystem::Print(int index)
 {
 	std::string buffer;
-	buffer += "Event Records:";
+	buffer += "Event Records:\n";
 	for (auto i : eventRecords) {
 		buffer += "[" + i->pEventDef->name + "]";
 		for (auto j : i->vArg)
@@ -89,3 +101,19 @@ void NCL::CSC8599::EventSystem::init()
 		eventDefContainer[g_Events[i].name] = &(g_Events[i]);
 	}
 }
+
+void NCL::CSC8599::EventSystem::processEvent(EVENT& event)
+{
+	EVENT_DEFINE* pEventDef = event.pEventDef;
+	if (!pEventDef) return;
+
+
+	if (!(pEventDef->listFunc.empty()))
+	{
+		for (auto func = event.pEventDef->listFunc.begin(); func != event.pEventDef->listFunc.end(); func++)
+		{
+			(*func)(&event);
+		}
+	}
+}
+

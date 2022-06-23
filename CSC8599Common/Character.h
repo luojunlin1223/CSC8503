@@ -29,6 +29,7 @@ namespace NCL {
 			StateMachine* get_state_machine()const { return state_machine_; }
 			GameObject* get_target()const { return target; }
 			bool isAlive();
+
 		protected:
 			StateMachine* state_machine_;
 			std::map<std::string, data> attrs_;

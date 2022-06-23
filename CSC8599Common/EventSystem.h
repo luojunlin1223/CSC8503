@@ -21,6 +21,16 @@ namespace NCL {
 		struct EVENT {
 			EVENT_DEFINE* pEventDef;
 			std::vector<std::string> vArg;
+			bool operator == (const EVENT& other)
+			{
+				if (other.pEventDef != pEventDef) return false;
+				if (other.vArg.size() != vArg.size()) return false;
+				for (size_t i = 0; i < vArg.size(); i++)
+				{
+					if (vArg[i] != other.vArg[i]) return false;
+				}
+				return true;
+			}
 		};
 		using EventDefContainer = std::map<std::string, EVENT_DEFINE*>;
 		using EventDefContainerIterator = EventDefContainer::iterator;
@@ -43,6 +53,7 @@ namespace NCL {
 			void Reset();
 		private:
 			void init();
+			void processEvent(EVENT& event);
 			EventDefContainer eventDefContainer;
 			std::list<EVENT*> eventQueue;
 			std::vector<EVENT*> eventRecords;

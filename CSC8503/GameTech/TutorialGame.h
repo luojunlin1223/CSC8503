@@ -3,7 +3,7 @@
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "StateGameObject.h"
 #include "../../CSC8599Common/EventSystem.h"
-
+#include "../../CSC8599Common/DebugStateMachine.h"
 namespace NCL
 {
 	namespace CSC8599
@@ -93,7 +93,7 @@ namespace NCL {
 			}
 			//EventSystem
 			EventSystem* event_system_ = nullptr;
-
+			DebugStateMachine* debug_state_machine = nullptr;
 		};
 	}
 }

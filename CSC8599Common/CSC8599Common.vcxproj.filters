@@ -66,6 +66,9 @@
     <ClInclude Include="PetController.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="DebugStateMachine.h">
+      <Filter>AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -109,6 +112,9 @@
     </ClCompile>
     <ClCompile Include="PetController.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugStateMachine.cpp">
+      <Filter>AI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

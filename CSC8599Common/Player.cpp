@@ -51,5 +51,18 @@ void NCL::CSC8599::Player::update(float dt)
 		}
 	}
 
+	auto _target = dynamic_cast<Character*>(target);
+	if(_target)
+	{
+		auto _target_target = _target->get_target();
+		if(_target_target)
+		{
+			if(_target_target->GetWorldID()==GetWorldID())
+				EventSystem::Get()->PushEvent("PlayerOverThreat", 0);
+		}
+	}
+
+
+				
 }
 

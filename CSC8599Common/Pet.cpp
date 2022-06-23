@@ -6,12 +6,12 @@
 #include "StateTransition.h"
 #include "PetController.h"
 #include "../CSC8503/CSC8503Common/Debug.h"
+#include "Monster.h"
 static  std::string models[3] = {"passive","assist","protect"};
 Pet::Pet(Character* _owner) :owner(_owner)
 {
 	init_attrs("pet.json");
 	user_controller_ = new PetController();
-	init();
 	EventSystem::Get()->RegisterEventHandler("OnHit", [this](EVENT* p_event)->void
 		{
 			const int source = stoi(p_event->vArg[0]);
@@ -29,12 +29,16 @@ Pet::Pet(Character* _owner) :owner(_owner)
 			}
 
 		});
+	EventSystem::Get()->RegisterEventHandler("PetTaunt", [this](EVENT* p_event)->void
+		{
+			auto _target=dynamic_cast<Monster*>(target);
+			if(_target)
+			{
+				_target->get_taunt(GetWorldID());
+			}
+		});
 }
 
-bool Pet::attack_to_taunt()
-{
-	return false;
-}
 
 void Pet::update(float dt)
 {
@@ -48,10 +52,6 @@ void Pet::UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix)
 	showHUD(viewMatrix,projectMatrix, models[static_cast<int>(model)], 9.f);
 }
 
-bool Pet::taunt_to_attack()
-{
-	return false;
-}
 
 bool Pet::attack_to_prepare()
 {
@@ -105,19 +105,10 @@ bool Pet::stand_to_move()
 void Pet::move_update(float dt)
 {
 	const float distance = (owner->GetTransform().GetPosition() - GetTransform().GetPosition()).Length();
-	if (distance <= 10.0f)return;
+	if (distance <= 20.0f)return;
 
 	const auto origin = GetTransform().GetPosition();
 
 	GetTransform().SetPosition(origin + (owner->GetTransform().GetPosition() - GetTransform().GetPosition()).Normalised()*1.0f);
 }
 
-void Pet::init()
-{
-	auto actions = (StateMachine*)state_machine_->GetComponent("actions");
-	auto taunt = new State([](float dt)->void { printf("im taunt\n"); });
-	auto attack = state_machine_->GetComponent("attack");
-	actions->AddComponent("taunt", taunt);
-	actions->AddTransition(new StateTransition(attack, taunt, [this](EVENT* event)->bool {return attack_to_taunt(); }, ""));
-	actions->AddTransition(new StateTransition(taunt, attack, [this](EVENT* event)->bool {return taunt_to_attack(); }, ""));
-}

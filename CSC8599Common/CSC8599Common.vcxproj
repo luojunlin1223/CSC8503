@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -150,6 +150,7 @@
     <ClInclude Include="AbstractComponent.h" />
     <ClInclude Include="AbstractStateMachine.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="DebugStateMachine.h" />
     <ClInclude Include="EventSystem.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Monster.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="AbstractComponent.cpp" />
     <ClCompile Include="AbstractStateMachine.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="DebugStateMachine.cpp" />
     <ClCompile Include="EventSystem.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="pch.cpp">

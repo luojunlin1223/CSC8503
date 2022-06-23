@@ -14,9 +14,13 @@ bool cmp_value(const std::pair<int, int> left, const std::pair<int, int> right)
 void Monster::get_damage(const int source_id, const int damage)
 {
 	Character::get_damage(source_id, damage);
-	ThreatMap[source_id] += 1;
+	ThreatMap[source_id] += damage;
 }
 
+void Monster::get_taunt(const int source_id)
+{
+	ThreatMap[source_id] = 999;
+}
 
 
 void Monster::attack_update(float dt)
