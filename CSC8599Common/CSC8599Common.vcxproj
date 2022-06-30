@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -157,6 +157,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pet.h" />
     <ClInclude Include="PetController.h" />
+    <ClInclude Include="PlalyerAIController.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="State.h" />
@@ -179,6 +180,7 @@
     </ClCompile>
     <ClCompile Include="Pet.cpp" />
     <ClCompile Include="PetController.cpp" />
+    <ClCompile Include="PlalyerAIController.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="State.cpp" />

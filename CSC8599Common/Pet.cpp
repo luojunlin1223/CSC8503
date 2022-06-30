@@ -3,7 +3,6 @@
 
 #include "EventSystem.h"
 #include "State.h"
-#include "StateTransition.h"
 #include "PetController.h"
 #include "../CSC8503/CSC8503Common/Debug.h"
 #include "Monster.h"

@@ -8,6 +8,9 @@
 #include "../../CSC8599Common/Player.h"
 #include "../../CSC8599Common/Monster.h"
 #include "../../CSC8599Common/Pet.h"
+#include "../../CSC8599Common/State.h"
+#include "../../CSC8599Common/StateTransition.h"
+#include "../../CSC8599Common/PlalyerAIController.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -25,6 +28,7 @@ TutorialGame::TutorialGame() {
 	Debug::SetRenderer(renderer);
 	event_system_ = new EventSystem();
 	debug_state_machine = new DebugStateMachine();
+	initStateMachine();
 	InitialiseAssets();
 }
 
@@ -53,7 +57,7 @@ void TutorialGame::InitialiseAssets() {
 	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 
-	InitCamera();
+	//InitCamera();
 	InitWorld();
 }
 
@@ -74,48 +78,8 @@ TutorialGame::~TutorialGame() {
 }
 
 void TutorialGame::UpdateGame(float dt) {
-	if (!inSelectionMode) {
-		world->GetMainCamera()->UpdateCamera(dt);
-	}
+	game_state_machine->Update(dt);
 
-	UpdateKeys();
-
-	if (useGravity) {
-		Debug::Print("(G)ravity on", Vector2(5, 95));
-	}
-	else {
-		Debug::Print("(G)ravity off", Vector2(5, 95));
-	}
-
-	SelectObject();
-	MoveSelectedObject();
-	physics->Update(dt);
-
-	if (lockedObject != nullptr) {
-		Vector3 objPos = lockedObject->GetTransform().GetPosition();
-		Vector3 camPos = objPos + lockedOffset;
-
-		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
-
-		Matrix4 modelMat = temp.Inverse();
-
-		Quaternion q(modelMat);
-		Vector3 angles = q.ToEuler(); //nearly there now!
-
-		world->GetMainCamera()->SetPosition(camPos);
-		world->GetMainCamera()->SetPitch(angles.x);
-		world->GetMainCamera()->SetYaw(angles.y);
-
-		//Debug::DrawAxisLines(lockedObject->GetTransform().GetMatrix(), 2.0f);
-	}
-
-	if (testStateObject) {
-		testStateObject->Update(dt);
-	}
-
-	world->UpdateWorld(dt);
-	//
-	debug_state_machine->Update(dt);
 	event_system_->Update(dt);
 
 	renderer->Update(dt);
@@ -166,6 +130,10 @@ void TutorialGame::UpdateKeys() {
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F3)) {
 		std::cout<<event_system_->Print(0)<<std::endl;
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F4)) {
+		useDebugSM = !useDebugSM; //Toggle debug state machine!
 	}
 }
 
@@ -257,6 +225,16 @@ void TutorialGame::InitCamera() {
 	lockedObject = nullptr;
 }
 
+void NCL::CSC8503::TutorialGame::MoveCameraToMenu()
+{
+	world->GetMainCamera()->SetNearPlane(0.1f);
+	world->GetMainCamera()->SetFarPlane(500.0f);
+	world->GetMainCamera()->SetPitch(-15.0f);
+	world->GetMainCamera()->SetYaw(315.0f);
+	world->GetMainCamera()->SetPosition(Vector3(0, 0, 0));
+	lockedObject = nullptr;
+}
+
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
@@ -265,6 +243,7 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 	//testStateObject = AddStateObjectToWorld(Vector3(10, 10, 5));
+
 }
 
 void TutorialGame::BridgeConstraintTest() {
@@ -435,10 +414,10 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	auto player=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
+	localPlayer=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
 	AddMonsterToWorld(Vector3(-5, 5, 0));
-	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), player));
-	player->set_pet(pet);
+	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
+	localPlayer->set_pet(pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
 }
 
@@ -561,6 +540,162 @@ StateGameObject* NCL::CSC8503::TutorialGame::AddStateObjectToWorld(const Vector3
 	world->AddGameObject(apple);
 
 	return apple;
+}
+
+void NCL::CSC8503::TutorialGame::initStateMachine()
+{
+	game_state_machine = new NCL::CSC8599::StateMachine("init",
+		new NCL::CSC8599::State([this](float dt)->void
+		{
+			MoveCameraToMenu();
+			std::vector<std::string> text;
+			text.emplace_back("Start the game");
+			text.emplace_back("Play the game automatically");
+
+			if (selected < 0)selected = 0;
+			if (selected >= text.size())selected = text.size() - 1;
+			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+				selected++;
+			}
+			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+				selected--;
+			}
+			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RETURN)) {
+				switch (selected)
+				{
+				case 0:
+					gameReset();
+					EventSystem::Get()->PushEvent("GameStart", 0);
+					break;
+				case 1:
+					gameReset();
+					localPlayer->set_user_controller(new PlayerAIController(localPlayer));
+					EventSystem::Get()->PushEvent("GameStart", 0);
+					break;
+				default:
+					break;
+				}
+			}
+			for (int i = 0; i < text.size(); ++i)
+			{
+				if (i == selected)
+					renderer->DrawString(text[i], Vector2(35, 20 * (i + 1)), Vector4(1, 0, 1, 1));
+				else
+					renderer->DrawString(text[i], Vector2(35, 20 * (i + 1)));
+			}
+		}));
+	game_state_machine->AddComponent("running", new NCL::CSC8599::State([this](float dt)->void
+		{
+			if (!inSelectionMode) {
+				world->GetMainCamera()->UpdateCamera(dt);
+			}
+
+			UpdateKeys();
+
+			if (useGravity) {
+				Debug::Print("(G)ravity on", Vector2(5, 95));
+			}
+			else {
+				Debug::Print("(G)ravity off", Vector2(5, 95));
+			}
+
+			SelectObject();
+			//MoveSelectedObject();
+			physics->Update(dt);
+
+			if (lockedObject != nullptr) {
+				Vector3 objPos = lockedObject->GetTransform().GetPosition();
+				Vector3 camPos = objPos + lockedOffset;
+
+				Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
+
+				Matrix4 modelMat = temp.Inverse();
+
+				Quaternion q(modelMat);
+				Vector3 angles = q.ToEuler(); //nearly there now!
+
+				world->GetMainCamera()->SetPosition(camPos);
+				world->GetMainCamera()->SetPitch(angles.x);
+				world->GetMainCamera()->SetYaw(angles.y);
+
+				//Debug::DrawAxisLines(lockedObject->GetTransform().GetMatrix(), 2.0f);
+			}
+
+			world->UpdateWorld(dt);
+
+			if(useDebugSM)
+			{
+				Debug::Print("(F4)Debug state machine on", Vector2(5, 5));
+				debug_state_machine->Update(dt);
+			}else
+			{
+				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
+			}
+		}));
+
+	game_state_machine->AddComponent("end", new NCL::CSC8599::State([this](float dt)->void
+		{
+			if(win+lose==total)
+			{
+				renderer->DrawString("win:" + std::to_string(win), Vector2(45, 50));
+				renderer->DrawString("lose:" + std::to_string(lose), Vector2(45, 55));
+				renderer->DrawString("Press enter to 'space' to the main menu", Vector2(25, 60));
+				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::SPACE))
+				{
+					//event_system_->PushEvent("GameReset", 0);
+				}
+			}
+			else
+			{
+				event_system_->PushEvent("GameReset", 0);
+			}
+			
+		}));
+
+	game_state_machine->AddTransition(new StateTransition(
+		game_state_machine->GetComponent("init"),
+		game_state_machine->GetComponent("running"),
+		[](EVENT* p_event)->bool
+		{
+			return true;
+		},
+		"GameStart"
+	));
+
+	game_state_machine->AddTransition(new StateTransition(
+		game_state_machine->GetComponent("running"),
+		game_state_machine->GetComponent("end"),
+		[this](EVENT* p_event)->bool
+		{
+			auto monsterDie = EventSystem::Get()->HasHappened("MonsterDie");
+			auto playerDie = EventSystem::Get()->HasHappened("PlayerDie");
+			if (monsterDie) win++;
+			if (playerDie)lose++;
+			return monsterDie|| playerDie;
+		},
+		""
+			));
+
+	
+	game_state_machine->AddTransition(new StateTransition(
+		game_state_machine->GetComponent("end"),
+		game_state_machine->GetComponent("running"),
+		[this](EVENT* p_event)->bool
+		{
+			gameReset();
+			localPlayer->set_user_controller(new PlayerAIController(localPlayer));
+			return true;
+		},
+		"GameReset"
+			));
+
+}
+
+void NCL::CSC8503::TutorialGame::gameReset()
+{
+	InitCamera();
+	event_system_->Reset();
+	InitWorld();
 }
 
 /*

@@ -15,6 +15,7 @@ namespace NCL {
 		class Pet;
 		class Character :public GameObject
 		{
+			friend class UserController;
 		public:
 			Character();
 			~Character() override = default;
@@ -29,12 +30,13 @@ namespace NCL {
 			StateMachine* get_state_machine()const { return state_machine_; }
 			GameObject* get_target()const { return target; }
 			bool isAlive();
-
+			void set_user_controller(UserController* controller) { user_controller_ = controller; }
 		protected:
 			StateMachine* state_machine_;
 			std::map<std::string, data> attrs_;
 			UserController* user_controller_;
 			GameObject* target;
+			
 			float attack_time = 0.f;
 			void init_attrs(const std::string& attr_file_name);
 			void init_state_machine();
@@ -50,6 +52,7 @@ namespace NCL {
 			virtual void move_update(float dt);
 			virtual void stand_update(float dt);
 			virtual void dead_update(float dt);
+
 
 		};
 	}

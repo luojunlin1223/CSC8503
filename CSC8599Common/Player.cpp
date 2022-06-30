@@ -31,6 +31,11 @@ bool NCL::CSC8599::Player::alive_to_dead()
 	return result;
 }
 
+bool NCL::CSC8599::Player::prepare_to_attack()
+{
+	return Character::prepare_to_attack()&&target->GetWorldID()!=pet->GetWorldID();
+}
+
 void NCL::CSC8599::Player::update(float dt)
 {
 	Character::update(dt);
@@ -65,4 +70,5 @@ void NCL::CSC8599::Player::update(float dt)
 
 				
 }
+
 

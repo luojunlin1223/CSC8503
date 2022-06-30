@@ -29,6 +29,7 @@ public:
 	virtual ~UserController() = default;
 	Input get_inputs() { return last_input_; }
 	virtual void update(const float dt) {}
+	int random(int low, int high);
 protected:
 	Input last_input_;
 	void clear_input() { last_input_ = {}; }

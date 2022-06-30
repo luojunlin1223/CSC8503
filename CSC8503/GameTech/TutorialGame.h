@@ -9,12 +9,14 @@ namespace NCL
 	namespace CSC8599
 	{
 		class Character;
+		class Player;
 	}
 }
 
 /*
 我们的任务是保证在物体渲染前相机移动、物理计算都是正确的。这个类的设计目的就是为了具体的游戏逻辑。作业会是这个类的子类
 */
+using namespace NCL::CSC8599;
 namespace NCL {
 	namespace CSC8503 {
 		class TutorialGame		{
@@ -31,6 +33,8 @@ namespace NCL {
 			void InitialiseAssets();
 
 			void InitCamera();
+			void MoveCameraToMenu();
+
 			void UpdateKeys();
 
 			void InitWorld();
@@ -93,7 +97,24 @@ namespace NCL {
 			}
 			//EventSystem
 			EventSystem* event_system_ = nullptr;
+
+			//DebugSM
+			bool useDebugSM = false;
 			DebugStateMachine* debug_state_machine = nullptr;
+
+			//Game State Machine
+			NCL::CSC8599::StateMachine* game_state_machine = nullptr;
+			void initStateMachine();
+			int selected = 0;
+
+			NCL::CSC8599::Player* localPlayer = nullptr;
+
+			//test
+			void gameReset();
+			int win = 0;
+			int lose = 0;
+			int total = 2;
+
 		};
 	}
 }

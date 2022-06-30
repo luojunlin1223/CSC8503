@@ -8,21 +8,20 @@ namespace NCL {
 		public:
 			Player();
 			void update(float dt) override;
+			Character* get_pet() const
+			{
+				return pet;
+			}
+			void set_pet(Character* _pet)
+			{
+				this->pet = _pet;
+			}
 		private:
 			void move_update(float dt) override;
 			Character* pet=nullptr;
 		protected:
 			bool alive_to_dead() override;
-		public:
-			Character* get_pet() const
-			{
-				return pet;
-			}
-
-			void set_pet(Character* _pet)
-			{
-				this->pet = _pet;
-			}
+			bool prepare_to_attack() override;
 		};
 	}
 }

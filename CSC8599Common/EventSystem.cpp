@@ -3,13 +3,15 @@
 EventSystem* EventSystem::p_self = nullptr;
 extern EVENT_DEFINE g_Events[] =
 {
-		{"ThreatChanged"},
-		{"OnHit"},
-		{"PlayerOverThreat"},
-		{"PlayerDie"},
-		{"PetDie"},
-		{"PetTaunt"},
-		{"MonsterDie"}
+	{"ThreatChanged"},
+	{"OnHit"},
+	{"PlayerOverThreat"},
+	{"PlayerDie"},
+	{"PetDie"},
+    {"PetTaunt"},
+	{"MonsterDie"},
+	{"GameStart"},
+	{"GameReset"}
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {

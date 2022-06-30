@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "Character.h"
+
 #include "../Common/Assets.h"
 #include "State.h"
 #include "StateMachinePlus.h"
 #include "EventSystem.h"
 #include "StateTransition.h"
 #include "../CSC8503/CSC8503Common/GameWorld.h"
+
 
 NCL::CSC8599::Character::Character()
 	:state_machine_(nullptr),

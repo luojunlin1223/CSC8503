@@ -69,6 +69,9 @@
     <ClInclude Include="DebugStateMachine.h">
       <Filter>AI</Filter>
     </ClInclude>
+    <ClInclude Include="PlalyerAIController.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -115,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="DebugStateMachine.cpp">
       <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="PlalyerAIController.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 	AddComponent("1", new State([this](float dt)->void
 	{
 		time_stack += dt;
-		if (time_stack > 0.5f)
+		if (time_stack > 1.5f)
 			EventSystem::Get()->PushEvent("PetTaunt", 0);
 	}));
 	AddTransition(new StateTransition(GetComponent("0"), GetComponent("1"), [this](EVENT* event)->bool
