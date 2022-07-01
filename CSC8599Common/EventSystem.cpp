@@ -11,7 +11,8 @@ extern EVENT_DEFINE g_Events[] =
     {"PetTaunt"},
 	{"MonsterDie"},
 	{"GameStart"},
-	{"GameReset"}
+	{"GameReset"},
+	{"GameInit"}
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {

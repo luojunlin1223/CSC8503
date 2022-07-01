@@ -188,7 +188,7 @@ void Character::attack_update(float dt)
 	attack_time += dt;
 	if (attack_time <= 0.1f)return;
 	attack_time = 0.0f;
-	_target->get_damage(GetWorldID(), 1);
+	_target->get_damage(GetWorldID(), get_attr("damage")._int);
 }
 
 void Character::prepare_update(float dt)

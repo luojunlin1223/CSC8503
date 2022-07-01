@@ -1,1 +1,1 @@
-{"name": "Monster", "age": 35, "health":100,"isGood":true}
+{"name": "Monster", "health":100,"damage":2}

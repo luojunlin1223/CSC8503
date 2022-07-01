@@ -114,7 +114,7 @@ namespace NCL {
 			int win = 0;
 			int lose = 0;
 			int total = 2;
-
+			
 		};
 	}
 }

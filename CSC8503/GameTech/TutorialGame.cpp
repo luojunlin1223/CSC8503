@@ -549,27 +549,30 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		{
 			MoveCameraToMenu();
 			std::vector<std::string> text;
-			text.emplace_back("Start the game");
-			text.emplace_back("Play the game automatically");
+			text.emplace_back("Debug off");
+			text.emplace_back("Debug on");
 
 			if (selected < 0)selected = 0;
 			if (selected >= text.size())selected = text.size() - 1;
-			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN)) {
 				selected++;
 			}
-			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::UP)) {
 				selected--;
 			}
-			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RETURN)) {
+			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
 				switch (selected)
 				{
 				case 0:
 					gameReset();
+					localPlayer->set_user_controller(new PlayerAIController(localPlayer));
+					useDebugSM = false;
 					EventSystem::Get()->PushEvent("GameStart", 0);
 					break;
 				case 1:
 					gameReset();
 					localPlayer->set_user_controller(new PlayerAIController(localPlayer));
+					useDebugSM = true;
 					EventSystem::Get()->PushEvent("GameStart", 0);
 					break;
 				default:
@@ -579,9 +582,9 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			for (int i = 0; i < text.size(); ++i)
 			{
 				if (i == selected)
-					renderer->DrawString(text[i], Vector2(35, 20 * (i + 1)), Vector4(1, 0, 1, 1));
+					renderer->DrawString(text[i], Vector2(45, 20 * (i + 1)), Vector4(1, 0, 1, 1));
 				else
-					renderer->DrawString(text[i], Vector2(35, 20 * (i + 1)));
+					renderer->DrawString(text[i], Vector2(45, 20 * (i + 1)));
 			}
 		}));
 	game_state_machine->AddComponent("running", new NCL::CSC8599::State([this](float dt)->void
@@ -642,7 +645,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 				renderer->DrawString("Press enter to 'space' to the main menu", Vector2(25, 60));
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::SPACE))
 				{
-					//event_system_->PushEvent("GameReset", 0);
+					event_system_->PushEvent("GameInit", 0);
 				}
 			}
 			else
@@ -687,6 +690,18 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			return true;
 		},
 		"GameReset"
+			));
+
+	game_state_machine->AddTransition(new StateTransition(
+		game_state_machine->GetComponent("end"),
+		game_state_machine->GetComponent("init"),
+		[this](EVENT* p_event)->bool
+		{
+			lose = 0;
+			win = 0;
+			return true;
+		},
+		"GameInit"
 			));
 
 }
