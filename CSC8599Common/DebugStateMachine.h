@@ -1,9 +1,9 @@
 #pragma once
-#include "StateMachine.h"
+#include "StateMachinePlus.h"
 namespace NCL {
 	namespace CSC8599
 	{
-		class DebugStateMachine:public StateMachine
+		class DebugStateMachine:public StateMachinePlus
 		{
 		public:
 			DebugStateMachine();

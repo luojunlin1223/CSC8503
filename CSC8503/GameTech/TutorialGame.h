@@ -8,6 +8,7 @@ namespace NCL
 {
 	namespace CSC8599
 	{
+		class StateMachine;
 		class Character;
 		class Player;
 	}
@@ -113,7 +114,7 @@ namespace NCL {
 			void gameReset();
 			int win = 0;
 			int lose = 0;
-			int total = 2;
+			int total = 10;
 			
 		};
 	}

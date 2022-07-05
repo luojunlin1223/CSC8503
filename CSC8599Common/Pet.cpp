@@ -28,7 +28,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 			}
 
 		});
-	EventSystem::Get()->RegisterEventHandler("PetTaunt", [this](EVENT* p_event)->void
+	EventSystem::Get()->RegisterEventHandler("Debug_PetTaunt", [this](EVENT* p_event)->void
 		{
 			auto _target=dynamic_cast<Monster*>(target);
 			if(_target)

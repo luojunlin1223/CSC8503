@@ -665,7 +665,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		"GameStart"
 	));
 
-	game_state_machine->AddTransition(new StateTransition(
+	/*game_state_machine->AddTransition(new StateTransition(
 		game_state_machine->GetComponent("running"),
 		game_state_machine->GetComponent("end"),
 		[this](EVENT* p_event)->bool
@@ -677,7 +677,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			return monsterDie|| playerDie;
 		},
 		""
-			));
+			));*/
 
 	
 	game_state_machine->AddTransition(new StateTransition(

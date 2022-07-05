@@ -153,6 +153,7 @@
     <ClInclude Include="DebugStateMachine.h" />
     <ClInclude Include="EventSystem.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="LTL_To_Edges.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pet.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="DebugStateMachine.cpp" />
     <ClCompile Include="EventSystem.cpp" />
+    <ClCompile Include="LTL_To_Edges.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
