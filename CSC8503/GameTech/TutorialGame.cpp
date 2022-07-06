@@ -54,8 +54,12 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("coin.msh", &bonusMesh);
 	loadFunc("capsule.msh", &capsuleMesh);
 
+	loadFunc("Dragon.msh", &redDragonMesh);
+
 	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
+
+	redDragonTex= (OGLTexture*)TextureLoader::LoadAPITexture("Albedo.png");
 
 	//InitCamera();
 	InitWorld();
@@ -68,6 +72,8 @@ TutorialGame::~TutorialGame() {
 	delete charMeshB;
 	delete enemyMesh;
 	delete bonusMesh;
+
+	delete redDragonMesh;
 
 	delete basicTex;
 	delete basicShader;
@@ -456,7 +462,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 }
 
 GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
-	float meshSize = 3.0f;
+	float meshSize = 0.5f;
 	float inverseMass = 0.5f;
 
 	auto* character = new Monster();
@@ -468,7 +474,8 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
+	character->SetRenderObject(new RenderObject(&character->GetTransform(),
+		redDragonMesh, redDragonTex, basicShader,Vector3(7* meshSize,5*meshSize,0)));
 
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 

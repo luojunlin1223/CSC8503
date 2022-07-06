@@ -36,6 +36,12 @@ Pet::Pet(Character* _owner) :owner(_owner)
 				_target->get_taunt(GetWorldID());
 			}
 		});
+	EventSystem::Get()->RegisterEventHandler("Debug_PetDie", [this](EVENT* p_event)->void
+		{
+			data temp;
+			temp._int = 0;
+			set_attr("health", temp);
+		});
 }
 
 

@@ -59,8 +59,11 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 		{
 		return !EventSystem::Get()->HasHappened("PetDie");
 		}, ""));
-
-	AddComponent("DebugA", A);
+	B->AddTransition(new StateTransition(B->GetComponent("0"), B->GetComponent("2"), [this](EVENT* event)->bool
+		{
+			return true;
+		}, "PetDie"));
+	//AddComponent("DebugA", A);
 	AddComponent("DebugB", B);
 }
 

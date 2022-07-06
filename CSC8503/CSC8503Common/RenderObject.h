@@ -3,6 +3,7 @@
 #include "../../Common/TextureBase.h"
 #include "../../Common/ShaderBase.h"
 #include "../../Common/Vector4.h"
+#include "../../Common/Vector3.h"
 /*
 渲染目标需要提供 网格体、贴图、shader、变换、颜色
 因为我们使用的是简单的光照模型 所以贴图没有指向Bump贴图的部分 （在复制的游戏引擎中贴图也许会被换做是一个指向材料的指针数组）
@@ -18,7 +19,7 @@ namespace NCL {
 		class RenderObject
 		{
 		public:
-			RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader);
+			RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader,Vector3 off=Vector3(0,0,0));
 			~RenderObject();
 
 			void SetDefaultTexture(TextureBase* t) {
@@ -48,7 +49,6 @@ namespace NCL {
 			Vector4 GetColour() const {
 				return colour;
 			}
-
 		protected:
 			MeshGeometry*	mesh;
 			TextureBase*	texture;

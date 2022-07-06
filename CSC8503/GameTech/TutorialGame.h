@@ -89,6 +89,9 @@ namespace NCL {
 			OGLMesh*	charMeshB	= nullptr;
 			OGLMesh*	enemyMesh	= nullptr;
 			OGLMesh*	bonusMesh	= nullptr;
+			//Game Meshes
+			OGLMesh* redDragonMesh = nullptr;
+			OGLTexture* redDragonTex = nullptr;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
