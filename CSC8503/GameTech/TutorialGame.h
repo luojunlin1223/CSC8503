@@ -61,6 +61,7 @@ namespace NCL {
 
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddMonsterToWorld(const Vector3& position);
+			GameObject* AddDragonToWorld(const Vector3& position);
 			GameObject* AddPetToWorld(const Vector3& position,Character* owner);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
@@ -92,6 +93,12 @@ namespace NCL {
 			//Game Meshes
 			OGLMesh* redDragonMesh = nullptr;
 			OGLTexture* redDragonTex = nullptr;
+			OGLMesh* MonsterMesh = nullptr;
+			OGLTexture* MonsterTex = nullptr;
+			OGLMesh* PlayerMesh = nullptr;
+			OGLTexture* PlayerTex = nullptr;
+			OGLMesh* PetMesh = nullptr;
+			OGLTexture* PetTex = nullptr;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;

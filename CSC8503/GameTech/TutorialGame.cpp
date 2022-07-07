@@ -55,6 +55,9 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("capsule.msh", &capsuleMesh);
 
 	loadFunc("Dragon.msh", &redDragonMesh);
+	loadFunc("Role_T.msh", &PlayerMesh);
+	loadFunc("DogPBR.msh", &MonsterMesh);
+	loadFunc("TurtleShell.msh", &PetMesh);
 
 	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
@@ -421,7 +424,8 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	localPlayer=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
-	AddMonsterToWorld(Vector3(-5, 5, 0));
+	//AddMonsterToWorld(Vector3(-5, 5, 0));
+	AddDragonToWorld(Vector3(-50, 5, 0));
 	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
 	localPlayer->set_pet(pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
@@ -430,7 +434,7 @@ void TutorialGame::InitGameExamples() {
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
-
+	Vector3 offset = Vector3(0, 1 * meshSize, 0);
 	//GameObject* character = new GameObject();
 	//Character* character = new Character();
 	const auto character = new NCL::CSC8599::Player();
@@ -443,12 +447,9 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	if (rand() % 2) {
-		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMeshA, nullptr, basicShader));
-	}
-	else {
-		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMeshB, nullptr, basicShader));
-	}
+	
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), PlayerMesh, nullptr, basicShader, offset));
+	
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
@@ -475,7 +476,34 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 		.SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(),
-		redDragonMesh, redDragonTex, basicShader,Vector3(7* meshSize,5*meshSize,0)));
+		MonsterMesh, nullptr, basicShader,Vector3(7* meshSize,5*meshSize,0)));
+
+	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
+
+	character->GetPhysicsObject()->SetInverseMass(inverseMass);
+	character->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(character);
+
+	return character;
+}
+
+GameObject* NCL::CSC8503::TutorialGame::AddDragonToWorld(const Vector3& position)
+{
+	float meshSize = 3.0f;
+	float inverseMass = 0.5f;
+
+	auto* character = new Monster();
+
+	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
+	character->SetBoundingVolume((CollisionVolume*)volume);
+
+	character->GetTransform()
+		.SetScale(Vector3(meshSize, meshSize, meshSize))
+		.SetPosition(position);
+
+	character->SetRenderObject(new RenderObject(&character->GetTransform(),
+		redDragonMesh, redDragonTex, basicShader, Vector3(7 * meshSize, 5 * meshSize, 0)));
 
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
@@ -489,15 +517,17 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 
 GameObject* TutorialGame::AddPetToWorld(const Vector3& position, Character* owner)
 {
+	float meshSize = 3.0f;
+	Vector3 offset = Vector3(4.5* meshSize,-2*meshSize, 9.5 * meshSize);
 	auto pet = new Pet(owner);
 
 	SphereVolume* volume = new SphereVolume(0.25f);
 	pet->SetBoundingVolume((CollisionVolume*)volume);
 	pet->GetTransform()
-		.SetScale(Vector3(0.25, 0.25, 0.25))
+		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	pet->SetRenderObject(new RenderObject(&pet->GetTransform(), bonusMesh, nullptr, basicShader));
+	pet->SetRenderObject(new RenderObject(&pet->GetTransform(), PetMesh, nullptr, basicShader, offset));
 	pet->SetPhysicsObject(new PhysicsObject(&pet->GetTransform(), pet->GetBoundingVolume()));
 
 	pet->GetPhysicsObject()->SetInverseMass(1.0f);
