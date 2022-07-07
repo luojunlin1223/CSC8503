@@ -11,6 +11,7 @@
 #include "../../CSC8599Common/State.h"
 #include "../../CSC8599Common/StateTransition.h"
 #include "../../CSC8599Common/PlalyerAIController.h"
+#include  "../../CSC8599Common/PlayerController.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -427,7 +428,7 @@ void TutorialGame::InitDefaultFloor() {
 void TutorialGame::InitGameExamples() {
 	localPlayer=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
 	AddMonsterToWorld(Vector3(-50, 8, 50));
-	AddDragonToWorld(Vector3(-50, 5, 0));
+	AddDragonToWorld(Vector3(-50, 10, 0));
 	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
 	localPlayer->set_pet(pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
@@ -436,7 +437,7 @@ void TutorialGame::InitGameExamples() {
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
-	Vector3 offset = Vector3(4.5 * meshSize, -1 * meshSize, 9.5 * meshSize);
+	Vector3 offset = Vector3(-4.5 * meshSize, 1 * meshSize, -9.5 * meshSize);
 	//GameObject* character = new GameObject();
 	//Character* character = new Character();
 	const auto character = new NCL::CSC8599::Player();
@@ -450,7 +451,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 		.SetPosition(position);
 
 	
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), PlayerMesh, PlayerTex, basicShader, offset));
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), PlayerMesh, PlayerTex, basicShader,offset));
 	
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
@@ -467,7 +468,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 	float meshSize =6.0f;
 	float inverseMass = 0.5f;
-	Vector3 offset = Vector3(-4*meshSize, -2 * meshSize, 4.5 * meshSize);
+	Vector3 offset = Vector3(4*meshSize, 2 * meshSize, -4.5 * meshSize);
 	auto* character = new Monster();
 
 	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
@@ -478,7 +479,7 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 		.SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(),
-		MonsterMesh, MonsterTex, basicShader, offset));
+		MonsterMesh, MonsterTex, basicShader,offset));
 
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
@@ -494,7 +495,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddDragonToWorld(const Vector3& position
 {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
-
+	Vector3 offset = Vector3(-7 * meshSize,  -7* meshSize, -5 * meshSize);
 	auto* character = new Monster();
 
 	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
@@ -505,7 +506,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddDragonToWorld(const Vector3& position
 		.SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(),
-		redDragonMesh, redDragonTex, basicShader, Vector3(7 * meshSize, 5 * meshSize, 0)));
+		redDragonMesh, redDragonTex, basicShader,offset));
 
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
@@ -520,7 +521,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddDragonToWorld(const Vector3& position
 GameObject* TutorialGame::AddPetToWorld(const Vector3& position, Character* owner)
 {
 	float meshSize = 3.0f;
-	Vector3 offset = Vector3(4.5* meshSize,-2*meshSize, 9.5 * meshSize);
+	Vector3 offset = Vector3(-4.5* meshSize,2*meshSize, -9.5 * meshSize);
 	auto pet = new Pet(owner);
 
 	SphereVolume* volume = new SphereVolume(0.25f);
@@ -529,7 +530,7 @@ GameObject* TutorialGame::AddPetToWorld(const Vector3& position, Character* owne
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	pet->SetRenderObject(new RenderObject(&pet->GetTransform(), PetMesh, PetTex, basicShader, offset));
+	pet->SetRenderObject(new RenderObject(&pet->GetTransform(), PetMesh, PetTex, basicShader,offset));
 	pet->SetPhysicsObject(new PhysicsObject(&pet->GetTransform(), pet->GetBoundingVolume()));
 
 	pet->GetPhysicsObject()->SetInverseMass(1.0f);
@@ -590,6 +591,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			std::vector<std::string> text;
 			text.emplace_back("Debug off");
 			text.emplace_back("Debug on");
+			text.emplace_back("Solo");
 
 			if (selected < 0)selected = 0;
 			if (selected >= text.size())selected = text.size() - 1;
@@ -611,6 +613,12 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 				case 1:
 					gameReset();
 					localPlayer->set_user_controller(new PlayerAIController(localPlayer));
+					useDebugSM = true;
+					EventSystem::Get()->PushEvent("GameStart", 0);
+					break;
+				case 2:
+					gameReset();
+					localPlayer->set_user_controller(new PlayerController());
 					useDebugSM = true;
 					EventSystem::Get()->PushEvent("GameStart", 0);
 					break;

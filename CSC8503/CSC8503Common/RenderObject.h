@@ -49,12 +49,17 @@ namespace NCL {
 			Vector4 GetColour() const {
 				return colour;
 			}
+			Vector3 GetOff() const
+			{
+				return offset;
+			}
 		protected:
 			MeshGeometry*	mesh;
 			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;
 			Vector4			colour;//颜色用来表达 如果物体被点击或者物体发生碰撞的时候 给出反应
+			Vector3         offset;
 		};
 	}
 }

@@ -84,6 +84,7 @@ namespace NCL {
 
 			virtual void update(float dt){}
 			virtual void UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix){}
+			bool isSelected = false;
 		protected:
 			Transform			transform;//提供物体的世界坐标，大小，本地和世界坐标变换矩阵
 
@@ -100,7 +101,7 @@ namespace NCL {
 			Layers layers;//游戏物体属于什么layer
 			void register_handlers();
 
-			bool isSelected = false;
+			
 			
 		};
 	}

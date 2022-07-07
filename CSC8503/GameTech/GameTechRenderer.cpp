@@ -250,8 +250,12 @@ void GameTechRenderer::RenderCamera() {
 
 			activeShader = shader;
 		}
-
-		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+		//offset
+		Transform temp;
+		temp.SetPosition((*i).GetTransform()->GetPosition()+(*i).GetOff());
+		temp.SetOrientation((*i).GetTransform()->GetOrientation());
+		temp.SetScale((*i).GetTransform()->GetScale());
+		Matrix4 modelMatrix = temp.GetMatrix();
 
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);			
 		

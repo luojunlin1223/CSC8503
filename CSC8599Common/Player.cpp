@@ -41,6 +41,8 @@ void NCL::CSC8599::Player::update(float dt)
 	Character::update(dt);
 	if (user_controller_->get_inputs().buttons[SWITCH_TARGET])
 		switch_nearest_target();
+	if (target)
+		target->isSelected = true;
 	if (user_controller_->get_inputs().buttons[SWITCH_PET_MODEL])
 	{
 		const auto temp = dynamic_cast<Pet*>(pet);
