@@ -53,7 +53,9 @@ void GameObject::register_handlers()
 	EventSystem::Get()->RegisterEventHandler("ThreatChanged", [this](EVENT* p_event)->void
 		{
 			int id = stoi(p_event->vArg[0]);
-			if (id != GetWorldID())
-				GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
+			isSelected = id != GetWorldID() ? false:true;
+			
+			//GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
+			
 		});
 }

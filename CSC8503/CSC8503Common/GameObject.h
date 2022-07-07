@@ -99,6 +99,8 @@ namespace NCL {
 
 			Layers layers;//游戏物体属于什么layer
 			void register_handlers();
+
+			bool isSelected = false;
 			
 		};
 	}

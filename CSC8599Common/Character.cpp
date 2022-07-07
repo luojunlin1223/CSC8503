@@ -62,6 +62,8 @@ void Character::UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix
 {
 	showHUD(viewMatrix,projectMatrix,name,5.f);
 	showHUD(viewMatrix, projectMatrix, std::to_string(get_attr("health")._int), 7.f);
+	if(isSelected)
+		showHUD(viewMatrix, projectMatrix, "[Focus]", 12.f,Vector4(1,1,0,1));
 }
 
 bool Character::isAlive()
@@ -133,7 +135,7 @@ void NCL::CSC8599::Character::init_state_machine()
 		[this](EVENT* event)->bool {return alive_to_dead(); }, ""));
 }
 
-void Character::showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix, std::string text, const float height)
+void Character::showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix, std::string text, const float height, Vector4 color)
 {
 	Matrix4 local = GetTransform().GetMatrix();
 	local.SetPositionVector({ 0, 0, 0 });
@@ -145,7 +147,7 @@ void Character::showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix, 
 	Vector2 canvas;
 	canvas.x = (clip.x + 2.0f) * 25.0f - 1.0f * text.size();
 	canvas.y = (1.0f - clip.y) * 50.0f - height;
-	Debug::Print(text, canvas);
+	Debug::Print(text, canvas,color);
 }
 
 bool NCL::CSC8599::Character::attack_to_prepare()

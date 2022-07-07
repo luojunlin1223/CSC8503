@@ -40,7 +40,7 @@ namespace NCL {
 			float attack_time = 0.f;
 			void init_attrs(const std::string& attr_file_name);
 			void init_state_machine();
-			void showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix,std::string text,const float height);
+			void showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix,std::string text,const float height,Vector4 color=Vector4(1,1,1,1));
 			virtual bool attack_to_prepare();
 			virtual bool prepare_to_attack();
 			virtual bool alive_to_dead();
