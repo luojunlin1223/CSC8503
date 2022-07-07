@@ -55,15 +55,17 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("capsule.msh", &capsuleMesh);
 
 	loadFunc("Dragon.msh", &redDragonMesh);
-	loadFunc("Role_T.msh", &PlayerMesh);
+	loadFunc("RobotKyle.msh", &PlayerMesh);
 	loadFunc("DogPBR.msh", &MonsterMesh);
 	loadFunc("TurtleShell.msh", &PetMesh);
 
-	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
+	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("nyan.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 
-	redDragonTex= (OGLTexture*)TextureLoader::LoadAPITexture("Albedo.png");
-
+	redDragonTex= (OGLTexture*)TextureLoader::LoadAPITexture("AlbedoDragon.png");
+	PetTex = (OGLTexture*)TextureLoader::LoadAPITexture("AlbedoPet.png");
+	MonsterTex = (OGLTexture*)TextureLoader::LoadAPITexture("AlbedoDog.png");
+	PlayerTex = (OGLTexture*)TextureLoader::LoadAPITexture("Robot_Color.png");
 	//InitCamera();
 	InitWorld();
 }
@@ -424,7 +426,7 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	localPlayer=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
-	//AddMonsterToWorld(Vector3(-5, 5, 0));
+	AddMonsterToWorld(Vector3(-50, 8, 50));
 	AddDragonToWorld(Vector3(-50, 5, 0));
 	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
 	localPlayer->set_pet(pet);
@@ -434,7 +436,7 @@ void TutorialGame::InitGameExamples() {
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
-	Vector3 offset = Vector3(0, 1 * meshSize, 0);
+	Vector3 offset = Vector3(4.5 * meshSize, -1 * meshSize, 9.5 * meshSize);
 	//GameObject* character = new GameObject();
 	//Character* character = new Character();
 	const auto character = new NCL::CSC8599::Player();
@@ -448,7 +450,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 		.SetPosition(position);
 
 	
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), PlayerMesh, nullptr, basicShader, offset));
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), PlayerMesh, PlayerTex, basicShader, offset));
 	
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
@@ -463,9 +465,9 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 }
 
 GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
-	float meshSize = 0.5f;
+	float meshSize =6.0f;
 	float inverseMass = 0.5f;
-
+	Vector3 offset = Vector3(-4*meshSize, -2 * meshSize, 4.5 * meshSize);
 	auto* character = new Monster();
 
 	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
@@ -476,7 +478,7 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 		.SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(),
-		MonsterMesh, nullptr, basicShader,Vector3(7* meshSize,5*meshSize,0)));
+		MonsterMesh, MonsterTex, basicShader, offset));
 
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
@@ -527,7 +529,7 @@ GameObject* TutorialGame::AddPetToWorld(const Vector3& position, Character* owne
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	pet->SetRenderObject(new RenderObject(&pet->GetTransform(), PetMesh, nullptr, basicShader, offset));
+	pet->SetRenderObject(new RenderObject(&pet->GetTransform(), PetMesh, PetTex, basicShader, offset));
 	pet->SetPhysicsObject(new PhysicsObject(&pet->GetTransform(), pet->GetBoundingVolume()));
 
 	pet->GetPhysicsObject()->SetInverseMass(1.0f);

@@ -252,6 +252,7 @@ void GameTechRenderer::RenderCamera() {
 		}
 
 		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);			
 		
 		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
