@@ -63,8 +63,45 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 		{
 			return true;
 		}, "PetDie"));
+	
+
+	auto C = new StateMachine("1",
+		new State([this](float dt)->void
+		{
+		}));
+	C->AddComponent("2", new State([this](float dt)->void
+		{}));
+	C->AddComponent("3", new State([this](float dt)->void
+		{}));
+	C->AddComponent("0", new State([this](float dt)->void
+	{
+	}));
+
+	C->AddTransition(new StateTransition(C->GetComponent("1"), C->GetComponent("3"), [this](EVENT* event)->bool
+		{
+			return true;
+		}, "SummonDragon"));
+	C->AddTransition(new StateTransition(C->GetComponent("2"), C->GetComponent("1"), [this](EVENT* event)->bool
+		{
+			return true;
+		}, "DragonDie"));
+	C->AddTransition(new StateTransition(C->GetComponent("3"), C->GetComponent("2"), [this](EVENT* event)->bool
+		{
+			return true;
+		}, "Arrival"));
+
+	C->AddTransition(new StateTransition(C->GetComponent("2"), C->GetComponent("3"), [this](EVENT* event)->bool
+		{
+			return true;
+		}, "SummonDragon"));
+	C->AddTransition(new StateTransition(C->GetComponent("3"), C->GetComponent("0"), [this](EVENT* event)->bool
+		{
+			EventSystem::Get()->PushEvent("Debug_DragonDie",0);
+			return true;
+		}, "DragonDie"));
 	//AddComponent("DebugA", A);
-	AddComponent("DebugB", B);
+	//AddComponent("DebugB", B);
+	AddComponent("DebugC", C);
 }
 
 NCL::CSC8599::DebugStateMachine::~DebugStateMachine()

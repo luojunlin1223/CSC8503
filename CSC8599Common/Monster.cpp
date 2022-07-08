@@ -72,6 +72,7 @@ void NCL::CSC8599::Monster::init_state_machine()
 	monster_state_machine = new StateMachine("init", init);
 	monster_state_machine->AddComponent("summon", summon);
 	monster_state_machine->AddComponent("ride",ride);
+	monster_state_machine->AddComponent("end", end);
 	monster_state_machine->AddTransition(new StateTransition(init, summon, [this](EVENT* event)->bool
 		{
 			auto health = get_attr("health")._int;
@@ -89,8 +90,8 @@ void NCL::CSC8599::Monster::init_state_machine()
 		}, ""));
 	monster_state_machine->AddTransition(new StateTransition(ride, end, [this](EVENT* event)->bool
 		{
-			immortal = false;
-			return true;
+		immortal = false;
+		return true;
 		}, "DragonDie"));
 
 }

@@ -774,6 +774,12 @@ void NCL::CSC8503::TutorialGame::initEventhandler()
 		monster->set_pet(dynamic_cast<Character*>(dragon));
 		return true;
 	});
+
+	event_system_->RegisterEventHandler("Debug_DragonDie", [this](EVENT* p_event)->bool
+		{
+			std::cout << "It looks like that your damage is so high!" << std::endl;
+			return true;
+		});
 }
 
 /*

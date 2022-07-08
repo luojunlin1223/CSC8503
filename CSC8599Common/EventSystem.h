@@ -16,6 +16,7 @@ namespace NCL {
 		struct EVENT;
 		struct EVENT_DEFINE {
 			std::string name;
+			bool delay = false;
 			std::list<std::function<void(EVENT*)>> listFunc;
 		};
 		struct EVENT {
@@ -56,7 +57,9 @@ namespace NCL {
 			void processEvent(EVENT& event);
 			EventDefContainer eventDefContainer;
 			std::list<EVENT*> eventQueue;
+			std::list<EVENT*> eventQueueDelay;
 			std::vector<EVENT*> eventRecords;
+			float time = 0.0f;
 		};
 	}
 }

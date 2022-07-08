@@ -14,8 +14,10 @@ extern EVENT_DEFINE g_Events[] =
 	{"GameStart"},
 	{"GameReset"},
 	{"GameInit"},
-   {"SummonDragon"},
-	{"DragonDie" }
+    {"SummonDragon"},
+	{"Arrival"},
+	{"DragonDie",true},
+	{"Debug_DragonDie"}
 
 };
 NCL::CSC8599::EventSystem::EventSystem()
@@ -26,6 +28,21 @@ NCL::CSC8599::EventSystem::EventSystem()
 
 void NCL::CSC8599::EventSystem::Update(float dt)
 {
+	if (!(eventQueueDelay.empty()))
+	{
+		const float WORK_STEP = 10;
+		time += dt;
+		if (time >= WORK_STEP)
+		{
+			auto event = *(eventQueueDelay.begin());
+			processEvent(*event);
+			eventQueueDelay.erase(eventQueueDelay.begin());
+			time = 0.0f;
+		}
+	}
+
+
+
 	std::list<EVENT*>::iterator it;
 	for (it = eventQueue.begin(); it != eventQueue.end(); it++)
 	{
@@ -76,14 +93,20 @@ void NCL::CSC8599::EventSystem::PushEvent(const std::string& name, int n, ...)
 		event->vArg.emplace_back(va_arg(args, char*));
 	}
 	va_end(args);
-
-	eventQueue.emplace_back(event);
+	if (event->pEventDef->delay)
+		eventQueueDelay.emplace_back(event);
+	else
+		eventQueue.emplace_back(event);
 	eventRecords.emplace_back(event);
 }
 
 EVENT* NCL::CSC8599::EventSystem::HasHappened(const std::string& name)
 {
 	for (auto event : eventQueue) {
+		if (event->pEventDef->name == name)
+			return event;
+	}
+	for (auto event : eventQueueDelay) {
 		if (event->pEventDef->name == name)
 			return event;
 	}
