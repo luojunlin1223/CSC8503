@@ -29,7 +29,7 @@ bool NCL::CSC8599::Dragon::stand_to_move()
 void NCL::CSC8599::Dragon::move_update(float dt)
 {
 	time_stack += dt;
-	if (time_stack > 0.01f)
+	if (time_stack > 0.1f)
 	{
 		const auto origin = GetTransform().GetPosition();
 		GetTransform().SetPosition(origin + (destination - GetTransform().GetPosition()).Normalised() * 1.0f);

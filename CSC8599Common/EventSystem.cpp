@@ -15,7 +15,7 @@ extern EVENT_DEFINE g_Events[] =
 	{"GameReset"},
 	{"GameInit"},
     {"SummonDragon"},
-	{"Arrival"},
+	{"Arrival",true},
 	{"DragonDie",true},
 	{"Debug_DragonDie"}
 

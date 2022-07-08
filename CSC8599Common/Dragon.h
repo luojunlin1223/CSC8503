@@ -19,7 +19,7 @@ namespace NCL {
 			void move_update(float dt) override;
 		private:
 			float time_stack = 0.0f;
-			Vector3 destination = Vector3(-20,15 , 0);
+			Vector3 destination = Vector3(-30,15 , 0);
 		};
 	}
 }

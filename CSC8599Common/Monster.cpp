@@ -58,7 +58,7 @@ void NCL::CSC8599::Monster::init_state_machine()
 	auto ride = new State([this](float dt)->void
 		{
 			time_stack += dt;
-			if (time_stack > 0.2f)
+			if (time_stack > 0.1f)
 			{
 				const auto origin = GetTransform().GetPosition();
 				const auto distance = (origin - pet->GetTransform().GetPosition()).Length();
@@ -68,7 +68,10 @@ void NCL::CSC8599::Monster::init_state_machine()
 			}
 		});
 	auto end = new State([this](float dt)->void
-		{});
+	{
+		if(EventSystem::Get()->HasHappened("DragonDie"))
+			immortal = false;
+	});
 	monster_state_machine = new StateMachine("init", init);
 	monster_state_machine->AddComponent("summon", summon);
 	monster_state_machine->AddComponent("ride",ride);
@@ -90,9 +93,8 @@ void NCL::CSC8599::Monster::init_state_machine()
 		}, ""));
 	monster_state_machine->AddTransition(new StateTransition(ride, end, [this](EVENT* event)->bool
 		{
-		immortal = false;
-		return true;
-		}, "DragonDie"));
+			return true;
+		}, "Arrival"));
 
 }
 

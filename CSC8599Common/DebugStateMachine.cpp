@@ -100,7 +100,7 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 			return true;
 		}, "DragonDie"));
 	//AddComponent("DebugA", A);
-	//AddComponent("DebugB", B);
+	AddComponent("DebugB", B);
 	AddComponent("DebugC", C);
 }
 
