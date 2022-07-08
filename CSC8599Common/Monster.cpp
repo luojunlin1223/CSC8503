@@ -8,11 +8,6 @@ Monster::Monster()
 {
 	init_attrs("monster.json");
 	init_state_machine();
-	EventSystem::Get()->RegisterEventHandler("DragonDie", [this](EVENT* p_event)->bool
-	{
-			immortal = false;
-			return true;
-	});
 }
 bool cmp_value(const std::pair<int, int> left, const std::pair<int, int> right)
 {
@@ -63,7 +58,7 @@ void NCL::CSC8599::Monster::init_state_machine()
 	auto ride = new State([this](float dt)->void
 		{
 			time_stack += dt;
-			if (time_stack > 0.1f)
+			if (time_stack > 0.2f)
 			{
 				const auto origin = GetTransform().GetPosition();
 				const auto distance = (origin - pet->GetTransform().GetPosition()).Length();
@@ -72,7 +67,8 @@ void NCL::CSC8599::Monster::init_state_machine()
 				time_stack = 0.0f;
 			}
 		});
-
+	auto end = new State([this](float dt)->void
+		{});
 	monster_state_machine = new StateMachine("init", init);
 	monster_state_machine->AddComponent("summon", summon);
 	monster_state_machine->AddComponent("ride",ride);
@@ -91,6 +87,11 @@ void NCL::CSC8599::Monster::init_state_machine()
 		{
 			return pet;
 		}, ""));
+	monster_state_machine->AddTransition(new StateTransition(ride, end, [this](EVENT* event)->bool
+		{
+			immortal = false;
+			return true;
+		}, "DragonDie"));
 
 }
 
