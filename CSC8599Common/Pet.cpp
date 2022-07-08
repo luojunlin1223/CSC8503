@@ -13,6 +13,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 	user_controller_ = new PetController();
 	EventSystem::Get()->RegisterEventHandler("OnHit", [this](EVENT* p_event)->void
 		{
+			if (!isAlive())return;
 			const int source = stoi(p_event->vArg[0]);
 			const int id = stoi(p_event->vArg[1]);
 			if (id == owner->GetWorldID())

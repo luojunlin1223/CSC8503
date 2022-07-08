@@ -16,6 +16,7 @@ namespace NCL {
 			void set_model(const ControlModelType type) { model = type; }
 			void update(float dt) override;
 			void UI_update(const Matrix4& viewMatrix, const Matrix4 projectMatrix) override;
+			Character* owner = nullptr;
 		protected:
 			bool attack_to_prepare() override;
 			bool prepare_to_attack() override;
@@ -31,7 +32,7 @@ namespace NCL {
 
 		private:
 			ControlModelType model=ControlModelType::PASSIVE;
-			Character* owner = nullptr;
+			
 		};
 	}
 }

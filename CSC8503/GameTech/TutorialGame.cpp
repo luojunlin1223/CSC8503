@@ -12,6 +12,7 @@
 #include "../../CSC8599Common/StateTransition.h"
 #include "../../CSC8599Common/PlalyerAIController.h"
 #include  "../../CSC8599Common/PlayerController.h"
+#include "../../CSC8599Common/Dragon.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -31,6 +32,7 @@ TutorialGame::TutorialGame() {
 	debug_state_machine = new DebugStateMachine();
 	initStateMachine();
 	InitialiseAssets();
+	initEventhandler();
 }
 
 /*
@@ -106,6 +108,7 @@ void TutorialGame::UpdateKeys() {
 		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
+		initEventhandler();
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -428,7 +431,7 @@ void TutorialGame::InitDefaultFloor() {
 void TutorialGame::InitGameExamples() {
 	localPlayer=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
 	AddMonsterToWorld(Vector3(-50, 8, 50));
-	AddDragonToWorld(Vector3(-50, 10, 0));
+	//AddDragonToWorld(Vector3(-50, 10, 0));
 	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
 	localPlayer->set_pet(pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
@@ -491,12 +494,12 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 	return character;
 }
 
-GameObject* NCL::CSC8503::TutorialGame::AddDragonToWorld(const Vector3& position)
+GameObject* NCL::CSC8503::TutorialGame::AddDragonToWorld(const Vector3& position, Character* owner)
 {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
 	Vector3 offset = Vector3(-7 * meshSize,  -7* meshSize, -5 * meshSize);
-	auto* character = new Monster();
+	auto* character = new Dragon(owner);
 
 	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
 	character->SetBoundingVolume((CollisionVolume*)volume);
@@ -651,7 +654,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 			SelectObject();
 			//MoveSelectedObject();
-			physics->Update(dt);
+			//physics->Update(dt);
 
 			if (lockedObject != nullptr) {
 				Vector3 objPos = lockedObject->GetTransform().GetPosition();
@@ -757,7 +760,20 @@ void NCL::CSC8503::TutorialGame::gameReset()
 {
 	InitCamera();
 	event_system_->Reset();
+	initEventhandler();
 	InitWorld();
+}
+
+void NCL::CSC8503::TutorialGame::initEventhandler()
+{
+	event_system_->RegisterEventHandler("SummonDragon", [this](EVENT* p_event)->bool
+	{
+		int id = stoi(p_event->vArg[0]);
+		auto monster = dynamic_cast<Monster*>(world->find_game_object(id));
+		auto dragon=AddDragonToWorld(Vector3(-50, 10, 0), monster);
+		monster->set_pet(dynamic_cast<Character*>(dragon));
+		return true;
+	});
 }
 
 /*

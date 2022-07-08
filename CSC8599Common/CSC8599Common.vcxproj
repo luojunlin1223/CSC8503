@@ -152,6 +152,7 @@
     <ClInclude Include="AbstractStateMachine.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="DebugStateMachine.h" />
+    <ClInclude Include="Dragon.h" />
     <ClInclude Include="EventSystem.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LTL_To_Edges.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="AbstractStateMachine.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="DebugStateMachine.cpp" />
+    <ClCompile Include="Dragon.cpp" />
     <ClCompile Include="EventSystem.cpp" />
     <ClCompile Include="LTL_To_Edges.cpp" />
     <ClCompile Include="Monster.cpp" />

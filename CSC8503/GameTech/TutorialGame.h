@@ -61,7 +61,7 @@ namespace NCL {
 
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddMonsterToWorld(const Vector3& position);
-			GameObject* AddDragonToWorld(const Vector3& position);
+			GameObject* AddDragonToWorld(const Vector3& position, Character* owner);
 			GameObject* AddPetToWorld(const Vector3& position,Character* owner);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
@@ -125,6 +125,8 @@ namespace NCL {
 			int win = 0;
 			int lose = 0;
 			int total = 10;
+
+			void initEventhandler();
 			
 		};
 	}

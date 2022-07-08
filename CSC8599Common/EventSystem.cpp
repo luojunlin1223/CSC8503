@@ -13,7 +13,10 @@ extern EVENT_DEFINE g_Events[] =
 	{"MonsterDie"},
 	{"GameStart"},
 	{"GameReset"},
-	{"GameInit"}
+	{"GameInit"},
+   {"SummonDragon"},
+	{"DragonDie" }
+
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {

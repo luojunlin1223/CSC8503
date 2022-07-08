@@ -18,10 +18,10 @@ namespace NCL {
 			}
 		private:
 			void move_update(float dt) override;
-			Character* pet=nullptr;
 		protected:
 			bool alive_to_dead() override;
 			bool prepare_to_attack() override;
+			Character* pet = nullptr;
 		};
 	}
 }
