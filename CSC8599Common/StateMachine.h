@@ -21,6 +21,12 @@ namespace NCL {
 			{
 				activeComponent = active;
 			}
+
+			TransitionContainer get_all_transitions() const
+			{
+				return allTransitions;
+			}
+
 		protected:
 			AbstractComponent* activeComponent;
 			TransitionContainer allTransitions;

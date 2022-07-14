@@ -17,6 +17,7 @@ namespace NCL {
 			}
 			void GetActiveCompoentArr(std::vector<std::string>& arr) override{};
 			std::string Print(int index)override;
+			int expectation=0;
 		protected:
 			StateUpdateFunction func;
 		};
