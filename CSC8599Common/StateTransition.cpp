@@ -6,3 +6,8 @@ bool NCL::CSC8599::StateTransition::CanTransition() const
 	if (trigger.empty() || event) return transitionFunction(event);
 	return false;
 }
+
+void NCL::CSC8599::StateTransition::RollBack()
+{
+	transitionFunction(nullptr);
+}

@@ -8,6 +8,9 @@ namespace NCL
 {
 	namespace CSC8599
 	{
+		class Dragon;
+		class Pet;
+		class Monster;
 		class StateMachine;
 		class Character;
 		class Player;
@@ -119,7 +122,9 @@ namespace NCL {
 			int selected = 0;
 
 			NCL::CSC8599::Player* localPlayer = nullptr;
-
+			NCL::CSC8599::Monster* _monster = nullptr;
+			NCL::CSC8599::Pet* _pet = nullptr;
+			NCL::CSC8599::Dragon* _dragon = nullptr;
 			//test
 			void gameReset();
 			int win = 0;

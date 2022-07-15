@@ -60,6 +60,7 @@ void NCL::CSC8599::Monster::init_state_machine()
 			time_stack += dt;
 			if (time_stack > 0.1f)
 			{
+				if (pet == nullptr)return;
 				const auto origin = GetTransform().GetPosition();
 				const auto distance = (origin - pet->GetTransform().GetPosition()).Length();
 				if(distance>=20.0f)
@@ -106,21 +107,21 @@ bool Monster::prepare_to_attack()
 
 bool Monster::move_to_stand()
 {
-	TARGET_EXIST false;
+	if (target == nullptr)return false;
 	const float distance = (target->GetTransform().GetPosition() - GetTransform().GetPosition()).Length();
 	return distance <= 10.0f;
 }
 
 bool Monster::stand_to_move()
 {
-	TARGET_EXIST false;
+	if (target == nullptr)return false;
 	const float distance = (target->GetTransform().GetPosition() - GetTransform().GetPosition()).Length();
 	return distance > 60.0f;
 }
 
 void Monster::move_update(float dt)
 {
-	TARGET_EXIST;
+	if (target == nullptr)return;
 	const auto origin = GetTransform().GetPosition();
 	if(!pet)
 	GetTransform().SetPosition(origin + (target->GetTransform().GetPosition() - GetTransform().GetPosition()).Normalised() * 1.0f);

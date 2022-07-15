@@ -152,7 +152,7 @@ void Character::showHUD(const Matrix4& viewMatrix, const Matrix4 projectMatrix, 
 
 bool NCL::CSC8599::Character::attack_to_prepare()
 {
-	TARGET_EXIST false;
+	if (target == nullptr)return false;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return false;
 	return  !_target->isAlive()|| user_controller_->get_inputs().buttons[STOP];
@@ -160,7 +160,7 @@ bool NCL::CSC8599::Character::attack_to_prepare()
 
 bool Character::prepare_to_attack()
 {
-	TARGET_EXIST false;
+	if (target == nullptr)return false;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return false;
 	return _target->isAlive() && user_controller_->get_inputs().buttons[ATTACK];
@@ -183,7 +183,7 @@ bool Character::stand_to_move()
 
 void Character::attack_update(float dt)
 {
-	TARGET_EXIST;
+	if (target == nullptr)return;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return;
 	if (!_target->isAlive())return;

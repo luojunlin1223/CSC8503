@@ -9,8 +9,9 @@ namespace NCL {
 		class StateMachine : public AbstractStateMachine {
 		public:
 			StateMachine(const std::string& name, AbstractComponent* defaultComponent)
-				:activeComponent(defaultComponent) {
+				:activeComponent(defaultComponent), ResetComponent(defaultComponent) {
 				AddComponent(name, defaultComponent);
+
 			}
 			~StateMachine() override { delete activeComponent; activeComponent = nullptr; };
 			void Update(float dt) override;
@@ -21,13 +22,15 @@ namespace NCL {
 			{
 				activeComponent = active;
 			}
-
+			void RollBack(StateTransition* trans);
 			TransitionContainer get_all_transitions() const
 			{
 				return allTransitions;
 			}
 
+			void Reset() override;
 		protected:
+			AbstractComponent* ResetComponent;
 			AbstractComponent* activeComponent;
 			TransitionContainer allTransitions;
 		};

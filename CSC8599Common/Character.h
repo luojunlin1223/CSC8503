@@ -2,7 +2,6 @@
 #include "../CSC8503/CSC8503Common/GameObject.h";
 #include "../Common/UserController.h"
 #include "StateMachine.h"
-#define TARGET_EXIST if(!target)return
 using namespace NCL::CSC8503;
 namespace NCL {
 	namespace CSC8599 {

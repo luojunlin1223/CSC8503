@@ -430,10 +430,10 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	localPlayer=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
-	AddMonsterToWorld(Vector3(-50, 8, 50));
+	_monster= dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 8, 50)));
 	//AddDragonToWorld(Vector3(-50, 10, 0));
-	const auto pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
-	localPlayer->set_pet(pet);
+	_pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
+	localPlayer->set_pet(_pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
 }
 
@@ -770,14 +770,36 @@ void NCL::CSC8503::TutorialGame::initEventhandler()
 	{
 		int id = stoi(p_event->vArg[0]);
 		auto monster = dynamic_cast<Monster*>(world->find_game_object(id));
-		auto dragon=AddDragonToWorld(Vector3(-50, 10, 0), monster);
-		monster->set_pet(dynamic_cast<Character*>(dragon));
+		_dragon= dynamic_cast<Dragon*>(AddDragonToWorld(Vector3(-50, 10, 0), monster));
+		monster->set_pet(_dragon);
 		return true;
 	});
 
 	event_system_->RegisterEventHandler("Debug_DragonDie", [this](EVENT* p_event)->bool
 		{
-			debug_state_machine->RePlanning();
+			debug_state_machine->RollBack(debug_state_machine->RePlanning());
+			return true;
+		});
+	event_system_->RegisterEventHandler("RollBack_DragonDied", [this](EVENT* p_event)->bool
+		{
+			auto temp = data();
+			temp._int = 100;
+			_dragon->set_attr("health", temp);
+			_dragon->GetTransform().SetPosition(Vector3(-50, 10, 0));
+			_dragon->get_state_machine()->Reset();
+			return true;
+		});
+	event_system_->RegisterEventHandler("RollBack_SummonDragon", [this](EVENT* p_event)->bool
+		{
+			world->RemoveGameObject(_dragon);
+			_monster->set_pet(nullptr);
+			auto temp = data();
+			temp._int = 100;
+			_monster->set_attr("health", temp);
+			_monster->GetTransform().SetPosition(Vector3(-10, 5, 0));
+			_monster->get_state_machine()->Reset();
+			_monster->get_monster_state_machine()->Reset();
+			_monster->immortal = false;
 			return true;
 		});
 }

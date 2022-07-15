@@ -9,6 +9,7 @@ void  NCL::CSC8599::StateMachine::Update(float dt) {
 
 	for (auto& i = range.first; i != range.second; ++i)
 	{
+		if (i->second->rollBack) continue;
 		if (i->second->CanTransition())
 		{
 			activeComponent = i->second->GetDestinationState();
@@ -51,4 +52,14 @@ void StateMachine::GetActiveCompoentArr(std::vector<std::string>& arr)
 		}
 		it.second->GetActiveCompoentArr(arr);
 	}
+}
+
+void NCL::CSC8599::StateMachine::RollBack(StateTransition* trans)
+{
+	activeComponent = trans->GetDestinationState();
+}
+
+void NCL::CSC8599::StateMachine::Reset()
+{
+	activeComponent = ResetComponent;
 }

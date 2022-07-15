@@ -72,7 +72,7 @@ bool Pet::attack_to_prepare()
 
 bool Pet::prepare_to_attack()
 {
-	TARGET_EXIST false;
+	if (target == nullptr)return false;
 	const auto _target = dynamic_cast<Character*>(target);
 	if (!_target)return false;
 	const auto health = _target->get_attr("health")._int;

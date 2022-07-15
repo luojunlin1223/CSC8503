@@ -3,11 +3,11 @@
 
 #include <algorithm>
 #include <forward_list>
+#include <iostream>
 
 #include "State.h"
 #include "StateTransition.h"
 #include "StateMachine.h"
-#include <stack>
 
 NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 {
@@ -125,16 +125,19 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 
 	C->AddTransition(new StateTransition(state0, state3, [this](EVENT* event)->bool
 		{
+			EventSystem::Get()->PushEvent("RollBack_DragonDied", 0);
 			return false;
-		}, ""));
+		}, "",true));
 	C->AddTransition(new StateTransition(state3, state1, [this](EVENT* event)->bool
 		{
+			EventSystem::Get()->PushEvent("RollBack_SummonDragon", 0);
 			return false;
-		}, ""));
+		}, "", true));
 	C->AddTransition(new StateTransition(state1, state2, [this](EVENT* event)->bool
 		{
+			//没有任何意义这个回滚
 			return false;
-		}, ""));
+		}, "", true));
 
 
 	//AddComponent("DebugA", A);
@@ -157,7 +160,7 @@ struct Node
 bool cmp(const std::forward_list<Node> a, const std::forward_list<Node> b) {
 	return a.begin()->f < b.begin()->f;
 }
-void NCL::CSC8599::DebugStateMachine::RePlanning()
+std::stack<NCL::CSC8599::State*>  NCL::CSC8599::DebugStateMachine::RePlanning()
 {
 	auto state_machine = dynamic_cast<StateMachine*>(GetComponent("DebugC"));
 	auto source = dynamic_cast<State*>(state_machine->GetComponent("0"));
@@ -180,11 +183,16 @@ void NCL::CSC8599::DebugStateMachine::RePlanning()
 		auto currentNode = openList[0];
 		openList.erase(openList.begin());
 		closeList.emplace_back(currentNode);
+		std::pair<TransitionIterator, TransitionIterator> range = allTrans.equal_range(currentNode.begin()->state);
 		if (currentNode.begin()->state == destination)
 		{
-			int i = 0;
+			std::stack<State*> result;
+			for(auto i:currentNode)
+			{
+				result.push(i.state);
+			}
+			return result;
 		}
-		std::pair<TransitionIterator, TransitionIterator> range = allTrans.equal_range(currentNode.begin()->state);
 		auto currentG = currentNode.begin()->g;
 		for (auto& i = range.first; i != range.second; ++i)
 		{
@@ -202,13 +210,34 @@ void NCL::CSC8599::DebugStateMachine::RePlanning()
 			}
 			if(skip)continue;
 			newNode.g = currentG + 1;
-		/*	newNode.h = -(newNode.state->expectation- destination->expectation);
-			newNode.f = newNode.g + newNode.h;*/
-			newNode.f = newNode.g;
+			newNode.h = -(newNode.state->expectation- destination->expectation);
+			newNode.f = newNode.g + newNode.h;
+			//newNode.f = newNode.g;
 
 			std::forward_list<Node> currentNodeCopy(currentNode);
 			currentNodeCopy.emplace_front( newNode);
 			openList.emplace_back(currentNodeCopy);
+		}
+	}
+}
+
+void NCL::CSC8599::DebugStateMachine::RollBack(std::stack<CSC8599::State*> path)
+{
+	auto state_machine = dynamic_cast<StateMachine*>(GetComponent("DebugC"));
+	auto allTrans = state_machine->get_all_transitions();
+	int size = path.size();
+	for (int i = 0; i < size-1; ++i)
+	{
+		std::pair<TransitionIterator, TransitionIterator> range = allTrans.equal_range(path.top());
+		path.pop();
+		for (auto& i = range.first; i != range.second; ++i)
+		{
+			if (i->second->GetDestinationState() == path.top())
+			{
+				i->second->RollBack();
+				state_machine->RollBack(i->second);
+				break;
+			}
 		}
 	}
 }

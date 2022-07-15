@@ -11,12 +11,18 @@ namespace NCL {
 			void get_damage(const int source_id, const int damage) override;
 			void get_taunt(const int source_id);
 			void update(float dt) override;
+			bool immortal = false;
+
+			StateMachine* get_monster_state_machine() const
+			{
+				return monster_state_machine;
+			}
+
 		private:
 			void attack_update(float dt) override;
 			std::map<int,int> ThreatMap;
 			StateMachine* monster_state_machine = nullptr;
 			void init_state_machine();
-			bool immortal = false;
 			float time_stack = 0.0f;
 		protected:
 			bool prepare_to_attack() override;

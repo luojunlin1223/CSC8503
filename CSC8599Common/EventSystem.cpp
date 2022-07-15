@@ -17,7 +17,9 @@ extern EVENT_DEFINE g_Events[] =
     {"SummonDragon"},
 	{"Arrival",true},
 	{"DragonDie",true},
-	{"Debug_DragonDie"}
+	{"Debug_DragonDie"},
+	{"RollBack_DragonDied"},
+	{"RollBack_SummonDragon"}
 
 };
 NCL::CSC8599::EventSystem::EventSystem()
