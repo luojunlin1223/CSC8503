@@ -22,7 +22,7 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 			if (time_stack > 1.5f)
 				EventSystem::Get()->PushEvent("Debug_PetTaunt", 0);
 		}));
-	A->AddTransition(new StateTransition(A->GetComponent("0"), A->GetComponent("1"), [this](EVENT* event)->bool
+	A->AddTransition(new CSC8599::StateTransition(A->GetComponent("0"), A->GetComponent("1"), [this](EVENT* event)->bool
 	{
 			return EventSystem::Get()->HasHappened("PlayerOverThreat");
 		/*&&
@@ -31,7 +31,7 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 				use LTL_TO_EDGES 
 		*/
 	},""));
-	A->AddTransition(new StateTransition(A->GetComponent("1"), A->GetComponent("0"), [this](EVENT* event)->bool
+	A->AddTransition(new CSC8599::StateTransition(A->GetComponent("1"), A->GetComponent("0"), [this](EVENT* event)->bool
 	{
 			return EventSystem::Get()->HasHappened("Debug_PetTaunt");
 		/*&&
@@ -53,20 +53,20 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 			EventSystem::Get()->PushEvent("Debug_PetDie", 0);
 		}));
 
-	B->AddTransition(new StateTransition(B->GetComponent("2"), B->GetComponent("1"), [this](EVENT* event)->bool
+	B->AddTransition(new CSC8599::StateTransition(B->GetComponent("2"), B->GetComponent("1"), [this](EVENT* event)->bool
 		{
 		return EventSystem::Get()->HasHappened("PlayerDie");
 		}, ""));
-	B->AddTransition(new StateTransition(B->GetComponent("1"), B->GetComponent("2"), [this](EVENT* event)->bool
+	B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("2"), [this](EVENT* event)->bool
 		{
 			return true;
 		}, "PetDie"));
 
-	B->AddTransition(new StateTransition(B->GetComponent("1"), B->GetComponent("0"), [this](EVENT* event)->bool
+	B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("0"), [this](EVENT* event)->bool
 		{
 		return !EventSystem::Get()->HasHappened("PetDie");
 		}, ""));
-	B->AddTransition(new StateTransition(B->GetComponent("0"), B->GetComponent("2"), [this](EVENT* event)->bool
+	B->AddTransition(new CSC8599::StateTransition(B->GetComponent("0"), B->GetComponent("2"), [this](EVENT* event)->bool
 		{
 			return true;
 		}, "PetDie"));
@@ -89,31 +89,30 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 
 		});
 
-	auto C = new StateMachine("1", state1);
+	auto C = new StateMachine("1", state1,state1);
 	C->AddComponent("2", state2);
 	C->AddComponent("3", state3);
 	C->AddComponent("0", state0);
 
-	C->AddTransition(new StateTransition(state1, state3, [this](EVENT* event)->bool
+	C->AddTransition(new CSC8599::StateTransition(state1, state3, [this](EVENT* event)->bool
 		{
 			return true;
 		}, "SummonDragon"));
-	C->AddTransition(new StateTransition(state2, state1, [this](EVENT* event)->bool
+	C->AddTransition(new CSC8599::StateTransition(state2, state1, [this](EVENT* event)->bool
 		{
 			return true;
 		}, "DragonDie"));
-	C->AddTransition(new StateTransition(state3, state2, [this](EVENT* event)->bool
+	C->AddTransition(new CSC8599::StateTransition(state3, state2, [this](EVENT* event)->bool
 		{
 			return true;
 		}, "Arrival"));
 
-	C->AddTransition(new StateTransition(state2, state3, [this](EVENT* event)->bool
+	C->AddTransition(new CSC8599::StateTransition(state2, state3, [this](EVENT* event)->bool
 		{
 			return true;
 		}, "SummonDragon"));
-	C->AddTransition(new StateTransition(state3, state0, [this](EVENT* event)->bool
+	C->AddTransition(new CSC8599::StateTransition(state3, state0, [this](EVENT* event)->bool
 		{
-			EventSystem::Get()->PushEvent("Debug_DragonDie",0);
 			return true;
 		}, "DragonDie"));
 
@@ -122,22 +121,20 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 	state3->expectation = 2;
 	state0->expectation = 3;
 
-
-	C->AddTransition(new StateTransition(state0, state3, [this](EVENT* event)->bool
+	C->AddTransition(new CSC8599::StateTransition(state0, state3, [this](EVENT* event)->bool
 		{
-			EventSystem::Get()->PushEvent("RollBack_DragonDied", 0);
 			return false;
-		}, "",true));
-	C->AddTransition(new StateTransition(state3, state1, [this](EVENT* event)->bool
+		}, "",false));
+	C->AddTransition(new CSC8599::StateTransition(state3, state1, [this](EVENT* event)->bool
 		{
-			EventSystem::Get()->PushEvent("RollBack_SummonDragon", 0);
+			EventSystem::Get()->PushEvent("Fix_DragonDie", 0);
 			return false;
-		}, "", true));
-	C->AddTransition(new StateTransition(state1, state2, [this](EVENT* event)->bool
+		}, "",false));
+	C->AddTransition(new CSC8599::StateTransition(state1, state2, [this](EVENT* event)->bool
 		{
 			//没有任何意义这个回滚
 			return false;
-		}, "", true));
+		}, "",false));
 
 
 	//AddComponent("DebugA", A);
@@ -148,96 +145,3 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 NCL::CSC8599::DebugStateMachine::~DebugStateMachine()
 = default;
 
-struct Node
-{
-	Node(State* state) :
-		f(0), g(0), h(0), state(state)
-	{}
-	int f, g, h;
-	State* state;
-};
-
-bool cmp(const std::forward_list<Node> a, const std::forward_list<Node> b) {
-	return a.begin()->f < b.begin()->f;
-}
-std::stack<NCL::CSC8599::State*>  NCL::CSC8599::DebugStateMachine::RePlanning()
-{
-	auto state_machine = dynamic_cast<StateMachine*>(GetComponent("DebugC"));
-	auto source = dynamic_cast<State*>(state_machine->GetComponent("0"));
-	auto destination = dynamic_cast<State*>(state_machine->GetComponent("1"));
-
-
-	std::vector<std::forward_list<Node>> openList;
-	std::vector<std::forward_list<Node>> closeList;
-
-	auto allState = state_machine->get_component_container();
-	auto allTrans = state_machine->get_all_transitions();
-	auto node = Node(source);
-	auto temp = std::forward_list<Node>();
-	temp.push_front(node);
-	openList.emplace_back(temp);
-
-	while (!openList.empty())
-	{
-		std::sort(openList.begin(),openList.end(),cmp);
-		auto currentNode = openList[0];
-		openList.erase(openList.begin());
-		closeList.emplace_back(currentNode);
-		std::pair<TransitionIterator, TransitionIterator> range = allTrans.equal_range(currentNode.begin()->state);
-		if (currentNode.begin()->state == destination)
-		{
-			std::stack<State*> result;
-			for(auto i:currentNode)
-			{
-				result.push(i.state);
-			}
-			return result;
-		}
-		auto currentG = currentNode.begin()->g;
-		for (auto& i = range.first; i != range.second; ++i)
-		{
-			
-			bool skip = false;
-			auto newState = dynamic_cast<State*>(i->second->GetDestinationState());
-			auto newNode = Node(newState);
-			for (auto i : closeList)
-			{
-				if (newNode.state == i.begin()->state)
-				{
-					skip=true;
-					break;
-				}
-			}
-			if(skip)continue;
-			newNode.g = currentG + 1;
-			newNode.h = -(newNode.state->expectation- destination->expectation);
-			newNode.f = newNode.g + newNode.h;
-			//newNode.f = newNode.g;
-
-			std::forward_list<Node> currentNodeCopy(currentNode);
-			currentNodeCopy.emplace_front( newNode);
-			openList.emplace_back(currentNodeCopy);
-		}
-	}
-}
-
-void NCL::CSC8599::DebugStateMachine::RollBack(std::stack<CSC8599::State*> path)
-{
-	auto state_machine = dynamic_cast<StateMachine*>(GetComponent("DebugC"));
-	auto allTrans = state_machine->get_all_transitions();
-	int size = path.size();
-	for (int i = 0; i < size-1; ++i)
-	{
-		std::pair<TransitionIterator, TransitionIterator> range = allTrans.equal_range(path.top());
-		path.pop();
-		for (auto& i = range.first; i != range.second; ++i)
-		{
-			if (i->second->GetDestinationState() == path.top())
-			{
-				i->second->RollBack();
-				state_machine->RollBack(i->second);
-				break;
-			}
-		}
-	}
-}

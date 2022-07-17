@@ -9,18 +9,17 @@ namespace NCL {
 		class StateTransition {
 		public:
 			StateTransition(AbstractComponent* source, AbstractComponent* dest, StateTransitionFunction f, std::string _trigger,
-				bool rollback=false) {
+				bool _enable=true) {
 				sourceState = source;
 				destinationState = dest;
 				transitionFunction = std::move(f);
 				trigger = _trigger;
-				rollBack = rollback;
+				enable = _enable;
 			}
 			bool CanTransition() const;
-			void RollBack();
 			AbstractComponent* GetDestinationState() const { return destinationState; }
 			AbstractComponent* GetSourceState() const { return sourceState; }
-			bool rollBack;
+			bool enable;
 		protected:
 			AbstractComponent* sourceState;
 			AbstractComponent* destinationState;

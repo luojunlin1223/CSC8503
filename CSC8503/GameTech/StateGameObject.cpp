@@ -21,7 +21,6 @@ StateGameObject::StateGameObject()
 	
 	stateMachine->AddState(stateA);
 	stateMachine->AddState(stateB);
-	
 	stateMachine->AddTransition(new StateTransition(stateA, stateB,
 			[&]()-> bool
 			{

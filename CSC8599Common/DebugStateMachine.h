@@ -20,8 +20,6 @@ namespace NCL {
 		public:
 			DebugStateMachine();
 			~DebugStateMachine() override;
-			std::stack<CSC8599::State*> RePlanning();
-			void RollBack(std::stack<CSC8599::State*> path);
 		private:
 			float time_stack=0.0f;
 		};

@@ -81,6 +81,9 @@
     <ClInclude Include="Dragon.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="AdaptiveDebugSystem.h">
+      <Filter>AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -137,5 +140,11 @@
     <ClCompile Include="Dragon.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="AdaptiveDebugSystem.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

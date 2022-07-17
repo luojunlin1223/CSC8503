@@ -1,6 +1,7 @@
 #pragma once
+#include <functional>
+
 #include "AbstractComponent.h"
-using namespace NCL::CSC8599;
 namespace NCL {
 	namespace CSC8599 {
 		using  StateUpdateFunction = std::function<void(float)>;

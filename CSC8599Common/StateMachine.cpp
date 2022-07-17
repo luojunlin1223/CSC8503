@@ -5,11 +5,11 @@ void  NCL::CSC8599::StateMachine::Update(float dt) {
 	if (activeComponent == nullptr)return;
 	activeComponent->Update(dt);
 	//Get the transition set starting from this state node;
-	std::pair<TransitionIterator, TransitionIterator> range = allTransitions.equal_range(activeComponent);
+	auto range = get_transitions(activeComponent);
 
 	for (auto& i = range.first; i != range.second; ++i)
 	{
-		if (i->second->rollBack) continue;
+		if (!i->second->enable)continue;
 		if (i->second->CanTransition())
 		{
 			activeComponent = i->second->GetDestinationState();
@@ -54,12 +54,7 @@ void StateMachine::GetActiveCompoentArr(std::vector<std::string>& arr)
 	}
 }
 
-void NCL::CSC8599::StateMachine::RollBack(StateTransition* trans)
+std::pair<TransitionIterator, TransitionIterator> StateMachine::get_transitions(AbstractComponent* state)
 {
-	activeComponent = trans->GetDestinationState();
-}
-
-void NCL::CSC8599::StateMachine::Reset()
-{
-	activeComponent = ResetComponent;
+	 return allTransitions.equal_range(state);
 }

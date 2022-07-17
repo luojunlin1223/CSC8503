@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="AbstractComponent.h" />
     <ClInclude Include="AbstractStateMachine.h" />
+    <ClInclude Include="AdaptiveDebugSystem.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="DebugStateMachine.h" />
     <ClInclude Include="Dragon.h" />
@@ -171,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="AbstractComponent.cpp" />
     <ClCompile Include="AbstractStateMachine.cpp" />
+    <ClCompile Include="AdaptiveDebugSystem.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="DebugStateMachine.cpp" />
     <ClCompile Include="Dragon.cpp" />
@@ -192,6 +194,9 @@
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateMachinePlus.cpp" />
     <ClCompile Include="StateTransition.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

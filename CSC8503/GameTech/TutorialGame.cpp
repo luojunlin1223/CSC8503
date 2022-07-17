@@ -13,6 +13,7 @@
 #include "../../CSC8599Common/PlalyerAIController.h"
 #include  "../../CSC8599Common/PlayerController.h"
 #include "../../CSC8599Common/Dragon.h"
+#include "../CSC8503Common/StateMachine.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -30,6 +31,8 @@ TutorialGame::TutorialGame() {
 	Debug::SetRenderer(renderer);
 	event_system_ = new EventSystem();
 	debug_state_machine = new DebugStateMachine();
+	adaptive_debug_system_ = new AdaptiveDebugSystem();
+
 	initStateMachine();
 	InitialiseAssets();
 	initEventhandler();
@@ -96,6 +99,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 	event_system_->Update(dt);
 
+	adaptive_debug_system_->update(dt);
 	renderer->Update(dt);
 
 	Debug::FlushRenderables(dt);
@@ -705,7 +709,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			
 		}));
 
-	game_state_machine->AddTransition(new StateTransition(
+	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("init"),
 		game_state_machine->GetComponent("running"),
 		[](EVENT* p_event)->bool
@@ -715,7 +719,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		"GameStart"
 	));
 
-	/*game_state_machine->AddTransition(new StateTransition(
+	/*game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("running"),
 		game_state_machine->GetComponent("end"),
 		[this](EVENT* p_event)->bool
@@ -730,7 +734,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			));*/
 
 	
-	game_state_machine->AddTransition(new StateTransition(
+	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
 		game_state_machine->GetComponent("running"),
 		[this](EVENT* p_event)->bool
@@ -742,7 +746,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		"GameReset"
 			));
 
-	game_state_machine->AddTransition(new StateTransition(
+	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
 		game_state_machine->GetComponent("init"),
 		[this](EVENT* p_event)->bool
@@ -772,33 +776,15 @@ void NCL::CSC8503::TutorialGame::initEventhandler()
 		auto monster = dynamic_cast<Monster*>(world->find_game_object(id));
 		_dragon= dynamic_cast<Dragon*>(AddDragonToWorld(Vector3(-50, 10, 0), monster));
 		monster->set_pet(_dragon);
+
+		auto env = Environment();
+		env.emplace_back(monster->get_monster_state_machine());
+		env.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
+		adaptive_debug_system_->insert(env);
 		return true;
 	});
-
-	event_system_->RegisterEventHandler("Debug_DragonDie", [this](EVENT* p_event)->bool
+	event_system_->RegisterEventHandler("Fix_DragonDie", [this](EVENT* p_event)->bool
 		{
-			debug_state_machine->RollBack(debug_state_machine->RePlanning());
-			return true;
-		});
-	event_system_->RegisterEventHandler("RollBack_DragonDied", [this](EVENT* p_event)->bool
-		{
-			auto temp = data();
-			temp._int = 100;
-			_dragon->set_attr("health", temp);
-			_dragon->GetTransform().SetPosition(Vector3(-50, 10, 0));
-			_dragon->get_state_machine()->Reset();
-			return true;
-		});
-	event_system_->RegisterEventHandler("RollBack_SummonDragon", [this](EVENT* p_event)->bool
-		{
-			world->RemoveGameObject(_dragon);
-			_monster->set_pet(nullptr);
-			auto temp = data();
-			temp._int = 100;
-			_monster->set_attr("health", temp);
-			_monster->GetTransform().SetPosition(Vector3(-10, 5, 0));
-			_monster->get_state_machine()->Reset();
-			_monster->get_monster_state_machine()->Reset();
 			_monster->immortal = false;
 			return true;
 		});

@@ -44,12 +44,12 @@ void TestStateMachine() {
 			data--;
 		}
 	);
-	StateTransition * stateAB = new StateTransition(A, B, [&](void)->bool
+	StateTransition * stateAB = new CSC8599::StateTransition(A, B, [&](void)->bool
 		{
 		return data > 10;
 		}
 	);
-	StateTransition * stateBA = new StateTransition(B, A, [&](void)->bool
+	StateTransition * stateBA = new CSC8599::StateTransition(B, A, [&](void)->bool
 		 {
 		return data < 0;
 		}

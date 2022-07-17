@@ -16,7 +16,6 @@ namespace NCL {
 			{
 				return ComponentContainer;
 			}
-			virtual void Reset(){}
 		protected:
 			std::map<std::string, AbstractComponent*> ComponentContainer;
 		};

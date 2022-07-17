@@ -107,18 +107,18 @@ void NCL::CSC8599::Character::init_state_machine()
 
 	const auto actions = new StateMachine("prepare", prepare);
 	actions->AddComponent("attack", attack);
-	actions->AddTransition(new StateTransition(attack, prepare,
+	actions->AddTransition(new CSC8599::StateTransition(attack, prepare,
 		[this](EVENT* event)->bool {return attack_to_prepare(); }, ""));
-	actions->AddTransition(new StateTransition(prepare, attack,
+	actions->AddTransition(new CSC8599::StateTransition(prepare, attack,
 		[this](EVENT* event)->bool {return prepare_to_attack(); }, ""));
 
 	const auto move = new State([this](float dt)->void { return move_update(dt); });
 	const auto stand = new State([this](float dt)->void { return stand_update(dt); });
 	const auto movement = new StateMachine("stand", stand);
 	movement->AddComponent("move", move);
-	movement->AddTransition(new StateTransition(move, stand,
+	movement->AddTransition(new CSC8599::StateTransition(move, stand,
 		[this](EVENT* event)->bool {return move_to_stand(); }, ""));
-	movement->AddTransition(new StateTransition(stand, move,
+	movement->AddTransition(new CSC8599::StateTransition(stand, move,
 		[this](EVENT* event)->bool {return stand_to_move(); }, ""));
 
 	const auto model = new StateMachinePlus;
@@ -131,7 +131,7 @@ void NCL::CSC8599::Character::init_state_machine()
 	const auto dead = new State([this](float dt)->void { return dead_update(dt); });
 	state_machine_ = new StateMachine("alive", alive);
 	state_machine_->AddComponent("dead", dead);
-	state_machine_->AddTransition(new StateTransition(alive, dead,
+	state_machine_->AddTransition(new CSC8599::StateTransition(alive, dead,
 		[this](EVENT* event)->bool {return alive_to_dead(); }, ""));
 }
 
