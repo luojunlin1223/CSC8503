@@ -33,8 +33,24 @@ TutorialGame::TutorialGame() {
 	Debug::SetRenderer(renderer);
 	event_system_ = new EventSystem();
 	debug_state_machine = new DebugStateMachine();
-	StateMachineParser::getInstance()->parse(
-		ltlf::Box(ltlf::Implies(ltlf::Act("g"), ltlf::Next(ltlf::Act("h")))));
+
+	auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("a"), 
+		ltlf::Diamond(ltlf::And(ltlf::Act("b"),ltlf::Act("c",true)))));
+	auto sigmaAll = std::unordered_set<std::string>{ "a", "b", "c" };
+	auto DebugA=StateMachineParser::getInstance()->parse(formula,sigmaAll);
+
+	formula = ltlf::Box(ltlf::Implies(ltlf::Act("a"),
+		ltlf::Next(ltlf::Act("b"))));
+	sigmaAll = std::unordered_set<std::string>{ "a", "b"};
+	auto DebugB = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+
+	formula = ltlf::Box(ltlf::Implies(ltlf::Act("b"),
+		ltlf::And(ltlf::Diamond(ltlf::Act("d")),
+			ltlf::Until(ltlf::Act("d",true),ltlf::Act("c"))
+			)));
+	sigmaAll = std::unordered_set<std::string>{ "a", "b", "c","d"};
+	auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+
 	adaptive_debug_system_ = new AdaptiveDebugSystem();
 
 	initStateMachine();

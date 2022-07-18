@@ -45,11 +45,8 @@ std::unordered_set<std::string> evaluate_easy_prop_to_atoms(const easy_prop& pro
         return {};
     }
 }
-NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula)
+NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll)
 {
-    // Set of all of the possible labels of the graph
-    std::unordered_set<std::string> sigmaAll{ "f", "g", "h" };
-
     std::stringstream s;
     // Representing the formula as per online syntax
     s << formula;

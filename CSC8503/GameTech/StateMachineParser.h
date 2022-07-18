@@ -5,7 +5,7 @@
 class StateMachineParser
 {
 public:
-	NCL::CSC8599::StateMachine* parse(ltlf& formula);
+	NCL::CSC8599::StateMachine* parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll);
 	static StateMachineParser* uniqueInstance;
 	static StateMachineParser* getInstance();
 private:
