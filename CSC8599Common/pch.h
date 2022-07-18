@@ -16,6 +16,8 @@
 #include <vector>
 #include <cstdarg>
 #include <fstream>
+#include <algorithm>
+#include <forward_list>
 //rapid json
 #include "../Plugins/rapidjson/rapidjson.h"
 #include "../Plugins/rapidjson/document.h"
@@ -24,4 +26,5 @@
 #include "../Plugins/rapidjson/stringbuffer.h"
 #include "../Plugins/rapidjson/writer.h"
 #include "../Plugins/rapidjson/istreamwrapper.h"
+
 #endif //PCH_H

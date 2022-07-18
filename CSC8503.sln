@@ -33,8 +33,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NavMeshVisualiser", "OtherP
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSC8599Common", "CSC8599Common\CSC8599Common.vcxproj", "{50D57E8A-824F-44C4-8C70-5B43E4F585E0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoostPythonTest", "BoostPythonTest\BoostPythonTest.vcxproj", "{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ORBIS = Debug|ORBIS
@@ -128,18 +126,6 @@ Global
 		{50D57E8A-824F-44C4-8C70-5B43E4F585E0}.Release|Win32.Build.0 = Release|Win32
 		{50D57E8A-824F-44C4-8C70-5B43E4F585E0}.Release|x64.ActiveCfg = Release|x64
 		{50D57E8A-824F-44C4-8C70-5B43E4F585E0}.Release|x64.Build.0 = Release|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Debug|ORBIS.ActiveCfg = Debug|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Debug|ORBIS.Build.0 = Debug|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Debug|Win32.Build.0 = Debug|Win32
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Debug|x64.ActiveCfg = Debug|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Debug|x64.Build.0 = Debug|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Release|ORBIS.ActiveCfg = Release|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Release|ORBIS.Build.0 = Release|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Release|Win32.ActiveCfg = Release|Win32
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Release|Win32.Build.0 = Release|Win32
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Release|x64.ActiveCfg = Release|x64
-		{ABB9F300-FB2D-4E2A-AEA4-637ACA31D4F5}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

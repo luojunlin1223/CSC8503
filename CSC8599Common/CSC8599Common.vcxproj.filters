@@ -19,9 +19,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{878d8a18-985d-4ed9-8dbf-9ec557a2b754}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -74,9 +71,6 @@
     </ClInclude>
     <ClInclude Include="PlalyerAIController.h">
       <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="LTL_To_Edges.h">
-      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Dragon.h">
       <Filter>GameObject</Filter>
@@ -133,9 +127,6 @@
     </ClCompile>
     <ClCompile Include="PlalyerAIController.cpp">
       <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="LTL_To_Edges.cpp">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Dragon.cpp">
       <Filter>GameObject</Filter>

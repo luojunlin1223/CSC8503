@@ -1,7 +1,5 @@
+#include "pch.h"
 #include "AdaptiveDebugSystem.h"
-
-#include <algorithm>
-#include <forward_list>
 
 #include "State.h"
 #include "StateMachine.h"

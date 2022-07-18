@@ -1,13 +1,10 @@
 #include "pch.h"
 #include "DebugStateMachine.h"
 
-#include <algorithm>
-#include <forward_list>
-#include <iostream>
-
 #include "State.h"
 #include "StateTransition.h"
 #include "StateMachine.h"
+
 
 NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 {

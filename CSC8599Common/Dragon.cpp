@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Dragon.h"
 #include "EventSystem.h"
 bool NCL::CSC8599::Dragon::alive_to_dead()

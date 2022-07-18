@@ -14,6 +14,8 @@
 #include  "../../CSC8599Common/PlayerController.h"
 #include "../../CSC8599Common/Dragon.h"
 #include "../CSC8503Common/StateMachine.h"
+#include "ltlf.h"
+#include "StateMachineParser.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -31,6 +33,8 @@ TutorialGame::TutorialGame() {
 	Debug::SetRenderer(renderer);
 	event_system_ = new EventSystem();
 	debug_state_machine = new DebugStateMachine();
+	StateMachineParser::getInstance()->parse(
+		ltlf::Box(ltlf::Implies(ltlf::Act("g"), ltlf::Next(ltlf::Act("h")))));
 	adaptive_debug_system_ = new AdaptiveDebugSystem();
 
 	initStateMachine();

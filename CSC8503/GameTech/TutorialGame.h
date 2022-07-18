@@ -5,6 +5,7 @@
 #include "../../CSC8599Common/EventSystem.h"
 #include "../../CSC8599Common/DebugStateMachine.h"
 #include "../../CSC8599Common/AdaptiveDebugSystem.h"
+
 namespace NCL
 {
 	namespace CSC8599
@@ -136,6 +137,7 @@ namespace NCL {
 
 			//
 			AdaptiveDebugSystem* adaptive_debug_system_=nullptr;
+
 		};
 	}
 }
