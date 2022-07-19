@@ -44,13 +44,15 @@ TutorialGame::TutorialGame() {
 	sigmaAll = std::unordered_set<std::string>{ "a", "b"};
 	auto DebugB = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
-	formula = ltlf::Box(ltlf::Implies(ltlf::Act("b"),
-		ltlf::And(ltlf::Diamond(ltlf::Act("d")),
-			ltlf::Until(ltlf::Act("d",true),ltlf::Act("c"))
+
+	formula = ltlf::Box(ltlf::Implies(ltlf::Act("summon_dragon"),
+		ltlf::And(ltlf::Diamond(ltlf::Act("dragon_die")),
+			ltlf::Until(ltlf::Act("dragon_die",true),ltlf::Act("arrival"))
 			)));
-	sigmaAll = std::unordered_set<std::string>{ "a", "b", "c","d"};
+	sigmaAll = std::unordered_set<std::string>{ "init", "summon_dragon", "arrival","dragon_die"};
 	auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
+	debug_state_machine->AddComponent("DebugC", DebugC);
 	adaptive_debug_system_ = new AdaptiveDebugSystem();
 
 	initStateMachine();
@@ -790,20 +792,21 @@ void NCL::CSC8503::TutorialGame::gameReset()
 
 void NCL::CSC8503::TutorialGame::initEventhandler()
 {
-	event_system_->RegisterEventHandler("SummonDragon", [this](EVENT* p_event)->bool
+	event_system_->RegisterEventHandler("summon_dragon", [this](EVENT* p_event)->bool
 	{
 		int id = stoi(p_event->vArg[0]);
 		auto monster = dynamic_cast<Monster*>(world->find_game_object(id));
 		_dragon= dynamic_cast<Dragon*>(AddDragonToWorld(Vector3(-50, 10, 0), monster));
 		monster->set_pet(_dragon);
 
-		auto env = Environment();
-		env.emplace_back(monster->get_monster_state_machine());
-		env.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
+		auto env =new Environment();
+		env->first = "DebugC";
+		env->second.emplace_back(monster->get_monster_state_machine());
+		env->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
 		adaptive_debug_system_->insert(env);
 		return true;
 	});
-	event_system_->RegisterEventHandler("Fix_DragonDie", [this](EVENT* p_event)->bool
+	event_system_->RegisterEventHandler("fix_DebugC", [this](EVENT* p_event)->bool
 		{
 			_monster->immortal = false;
 			return true;

@@ -16,13 +16,13 @@ namespace NCL {
 		class State;
 		class StateMachine;
 		using Path = std::stack<State*>;
-		using Environment = std::vector<StateMachine*>;
-		using EnvContainer = std::vector<Environment>;
+		using Environment = std::pair<std::string,std::vector<StateMachine*>>;
+		using EnvContainer = std::vector<Environment*>;
 		class AdaptiveDebugSystem
 		{
 		public:
 			AdaptiveDebugSystem();
-			void insert(Environment& env);
+			void insert(Environment* env);
 			void update(float dt);
 		protected:
 			EnvContainer env_container_;

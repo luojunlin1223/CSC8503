@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "AdaptiveDebugSystem.h"
 
+#include <iostream>
+
 #include "State.h"
 #include "StateMachine.h"
 #include "StateTransition.h"
@@ -19,20 +21,21 @@ bool cmp(const std::forward_list<Node> a, const std::forward_list<Node> b) {
 
 NCL::CSC8599::AdaptiveDebugSystem::AdaptiveDebugSystem() = default;
 
-void AdaptiveDebugSystem::insert(Environment& env)
+void AdaptiveDebugSystem::insert(Environment* env)
 {
 	env_container_.emplace_back(env);
 }
 
 void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 {
-	auto env = find_deadlock_env();
+	const auto env = find_deadlock_env();
 	if (env == nullptr)return;
-	for(auto i:*env)
+	for(auto i:env->second)
 	{
 		auto path = re_plan(i);
 		adjust(path,i);
 	}
+	EventSystem::Get()->PushEvent("fix_"+env->first,0);
 }
 
 void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_machine)
@@ -63,6 +66,8 @@ void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_ma
 		}
 	}
 	state_machine->SetActiveComponent(path.top());
+	
+	//TODO:事件系统和 这个系统都应该是一个单例
 }
 
 
@@ -70,7 +75,7 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 {
 	for (auto& env : env_container_)
 	{
-		for (auto& state_machine : env)
+		for (auto& state_machine : env->second)
 		{
 			auto active = state_machine->get_active_component();
 			auto exp = state_machine->get_exp_component();
@@ -80,16 +85,21 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 				continue;
 			auto range = state_machine->get_transitions(active);
 			bool HasOutGoing = false;
+
+			if(active)
+
 			for (auto& i = range.first; i != range.second; ++i)
 			{
-				if (i->second->enable)
+				if (i->second->enable&& i->second->GetSourceState()!=i->second->GetDestinationState())
 				{
 					HasOutGoing = true;
 					break;
 				}
 			}
 			if (!HasOutGoing)
-				return &env;
+			{
+				return env;
+			}
 		}
 	}
 	return nullptr;
