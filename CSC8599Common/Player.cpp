@@ -8,6 +8,15 @@ NCL::CSC8599::Player::Player()
 {
 	user_controller_ = new PlayerController();
 	init_attrs("player.json");
+	EventSystem::getInstance()->RegisterEventHandler("ThreatChanged", [this](EVENT* p_event)->void
+		{
+			const int id = std::stoi(p_event->vArg[0]);
+			const int source = std::stoi(p_event->vArg[1]);
+		if(id==GetWorldID())
+		{
+			EventSystem::getInstance()->PushEvent("player_over_threat", 0);
+		}
+		});
 }
 
 void NCL::CSC8599::Player::move_update(float dt)
@@ -27,7 +36,7 @@ void NCL::CSC8599::Player::move_update(float dt)
 bool NCL::CSC8599::Player::alive_to_dead()
 {
 	const auto result = Character::alive_to_dead();
-	if (result)EventSystem::getInstance()->PushEvent("PlayerDie", 1, std::to_string(GetWorldID()).c_str());
+	if (result)EventSystem::getInstance()->PushEvent("player_die", 1, std::to_string(GetWorldID()).c_str());
 	return result;
 }
 
@@ -56,19 +65,16 @@ void NCL::CSC8599::Player::update(float dt)
 		}
 	}
 
-	auto _target = dynamic_cast<Character*>(target);
-	if(_target)
-	{
-		auto _target_target = _target->get_target();
-		if(_target_target)
-		{
-			if(_target_target->GetWorldID()==GetWorldID())
-				EventSystem::getInstance()->PushEvent("PlayerOverThreat", 0);
-		}
-	}
-
-
-				
+	//auto _target = dynamic_cast<Character*>(target);
+	//if(_target)
+	//{
+	//	auto _target_target = _target->get_target();
+	//	if(_target_target)
+	//	{
+	//		if(_target_target->GetWorldID()==GetWorldID())
+	//			EventSystem::getInstance()->PushEvent("player_over_threat", 0);
+	//	}
+	//}
 }
 
 

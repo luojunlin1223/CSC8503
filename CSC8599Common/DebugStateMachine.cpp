@@ -21,9 +21,9 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 	//	}));
 	//A->AddTransition(new CSC8599::StateTransition(A->GetComponent("0"), A->GetComponent("1"), [this](EVENT* event)->bool
 	//{
-	//		return EventSystem::getInstance()->HasHappened("PlayerOverThreat");
+	//		return EventSystem::getInstance()->HasHappened("player_over_threat");
 	//	/*&&
-	//			(EventSystem::getInstance()->HasHappened("PlayerDie")||
+	//			(EventSystem::getInstance()->HasHappened("player_die")||
 	//				!EventSystem::getInstance()->HasHappened("Debug_PetTaunt"))
 	//			use LTL_TO_EDGES 
 	//	*/
@@ -32,7 +32,7 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 	//{
 	//		return EventSystem::getInstance()->HasHappened("Debug_PetTaunt");
 	//	/*&&
-	//			!EventSystem::getInstance()->HasHappened("PlayerDie")
+	//			!EventSystem::getInstance()->HasHappened("player_die")
 
 	//	*/
 	//}, ""));
@@ -52,21 +52,21 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 
 	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("2"), B->GetComponent("1"), [this](EVENT* event)->bool
 	//	{
-	//	return EventSystem::getInstance()->HasHappened("PlayerDie");
+	//	return EventSystem::getInstance()->HasHappened("player_die");
 	//	}, ""));
 	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("2"), [this](EVENT* event)->bool
 	//	{
 	//		return true;
-	//	}, "PetDie"));
+	//	}, "pet_die"));
 
 	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("0"), [this](EVENT* event)->bool
 	//	{
-	//	return !EventSystem::getInstance()->HasHappened("PetDie");
+	//	return !EventSystem::getInstance()->HasHappened("pet_die");
 	//	}, ""));
 	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("0"), B->GetComponent("2"), [this](EVENT* event)->bool
 	//	{
 	//		return true;
-	//	}, "PetDie"));
+	//	}, "pet_die"));
 
 	//auto state0 = new  State([this](float dt)->void
 	//	{

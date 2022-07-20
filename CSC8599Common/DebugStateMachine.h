@@ -20,8 +20,6 @@ namespace NCL {
 		public:
 			DebugStateMachine();
 			~DebugStateMachine() override;
-		private:
-			float time_stack = 0.0f;
 		};
 	}
 }

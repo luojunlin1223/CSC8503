@@ -42,7 +42,7 @@ void NCL::CSC8599::StateMachine::AddTransition(StateTransition* t) {
 	allTransitions.insert(std::make_pair(t->GetSourceState(), t));
 }
 
-void StateMachine::GetActiveCompoentArr(std::vector<std::string>& arr)
+void StateMachine::GetActiveComponentArr(std::vector<std::string>& arr)
 {
 	for (auto& it : ComponentContainer)
 	{
@@ -50,7 +50,7 @@ void StateMachine::GetActiveCompoentArr(std::vector<std::string>& arr)
 		{
 			arr.emplace_back(it.first);
 		}
-		it.second->GetActiveCompoentArr(arr);
+		it.second->GetActiveComponentArr(arr);
 	}
 }
 

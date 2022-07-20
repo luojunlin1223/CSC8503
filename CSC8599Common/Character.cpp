@@ -12,7 +12,8 @@
 NCL::CSC8599::Character::Character()
 	:state_machine_(nullptr),
 	target(nullptr),
-	user_controller_(new UserController())
+	user_controller_(new UserController()),
+	timer(new GameTimer)
 {
 	init_state_machine();
 }
@@ -45,7 +46,7 @@ bool Character::switch_target(const int target_id)
 	if (!temp)return false;
 	if (target && target->GetWorldID() == temp->GetWorldID())return false;
 	target = temp;
-	EventSystem::getInstance()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
+	EventSystem::getInstance()->PushEvent("ThreatChanged", 2, std::to_string(target->GetWorldID()).c_str(),std::to_string(GetWorldID()).c_str());
 	return true;
 }
 
@@ -54,7 +55,7 @@ bool Character::switch_nearest_target()
 	const auto temp = GameWorld::Get()->find_nearest_game_object(this);
 	if (!temp)return false;
 	target = temp;
-	EventSystem::getInstance()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
+	EventSystem::getInstance()->PushEvent("ThreatChanged", 2, std::to_string(target->GetWorldID()).c_str(),std::to_string(GetWorldID()).c_str());
 	return true;
 }
 

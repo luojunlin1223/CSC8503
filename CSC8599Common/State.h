@@ -16,7 +16,7 @@ namespace NCL {
 				if (func != nullptr)
 					func(dt);
 			}
-			void GetActiveCompoentArr(std::vector<std::string>& arr) override{};
+			void GetActiveComponentArr(std::vector<std::string>& arr) override{};
 			std::string Print(int index)override;
 			int expectation=0;
 		protected:

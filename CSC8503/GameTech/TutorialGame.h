@@ -28,7 +28,7 @@ namespace NCL {
 		class TutorialGame		{
 		public:
 			TutorialGame();
-			~TutorialGame();
+			virtual ~TutorialGame();
 			/// <summary>
 			/// 一个while循环更新游戏
 			/// </summary>
@@ -131,7 +131,7 @@ namespace NCL {
 			int lose = 0;
 			int total = 10;
 
-			void initEventhandler();
+			void initEventHandler();
 
 		};
 	}

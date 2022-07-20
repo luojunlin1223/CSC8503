@@ -32,31 +32,27 @@ TutorialGame::TutorialGame() {
 
 	Debug::SetRenderer(renderer);
 
-	debug_state_machine = new DebugStateMachine();
-
-	auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("a"), 
-		ltlf::Diamond(ltlf::And(ltlf::Act("b"),ltlf::Act("c",true)))));
-	auto sigmaAll = std::unordered_set<std::string>{ "a", "b", "c" };
-	auto DebugA=StateMachineParser::getInstance()->parse(formula,sigmaAll);
-
-	formula = ltlf::Box(ltlf::Implies(ltlf::Act("a"),
-		ltlf::Next(ltlf::Act("b"))));
-	sigmaAll = std::unordered_set<std::string>{ "a", "b"};
-	auto DebugB = StateMachineParser::getInstance()->parse(formula, sigmaAll);
-
-
-	formula = ltlf::Box(ltlf::Implies(ltlf::Act("summon_dragon"),
-		ltlf::And(ltlf::Diamond(ltlf::Act("dragon_die")),
-			ltlf::Until(ltlf::Act("dragon_die",true),ltlf::Act("arrival"))
-			)));
-	sigmaAll = std::unordered_set<std::string>{ "init", "summon_dragon", "arrival","dragon_die"};
-	auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
-
-	debug_state_machine->AddComponent("DebugC", DebugC);
-
 	initStateMachine();
 	InitialiseAssets();
-	initEventhandler();
+	initEventHandler();
+	auto envC = new Environment();
+	envC->first = "DebugC";
+	envC->second.emplace_back(_monster->get_monster_state_machine());
+	envC->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
+	AdaptiveDebugSystem::getInstance()->insert(envC);
+
+	/*auto envA = new Environment();
+	envA->first = "DebugA";
+	envA->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugA")));
+	AdaptiveDebugSystem::getInstance()->insert(envA);*/
+
+	auto envB = new Environment();
+	envB->first = "DebugB";
+	envB->second.emplace_back(localPlayer->get_state_machine());
+	envB->second.emplace_back(_pet->get_state_machine());
+	envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
+	AdaptiveDebugSystem::getInstance()->insert(envB);
+
 }
 
 /*
@@ -121,6 +117,7 @@ void TutorialGame::UpdateGame(float dt) {
 	EventSystem::getInstance()->Update(dt);
 
 	AdaptiveDebugSystem::getInstance()->update(dt);
+
 	renderer->Update(dt);
 
 	Debug::FlushRenderables(dt);
@@ -133,7 +130,7 @@ void TutorialGame::UpdateKeys() {
 		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
-		initEventhandler();
+		initEventHandler();
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -174,6 +171,9 @@ void TutorialGame::UpdateKeys() {
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F4)) {
 		useDebugSM = !useDebugSM; //Toggle debug state machine!
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F5)) {
+		std::cout << *AdaptiveDebugSystem::getInstance() << std::endl;
 	}
 }
 
@@ -740,21 +740,6 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		"GameStart"
 	));
 
-	/*game_state_machine->AddTransition(new CSC8599::StateTransition(
-		game_state_machine->GetComponent("running"),
-		game_state_machine->GetComponent("end"),
-		[this](EVENT* p_event)->bool
-		{
-			auto monsterDie = EventSystem::getInstance()->HasHappened("MonsterDie");
-			auto playerDie = EventSystem::getInstance()->HasHappened("PlayerDie");
-			if (monsterDie) win++;
-			if (playerDie)lose++;
-			return monsterDie|| playerDie;
-		},
-		""
-			));*/
-
-	
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
 		game_state_machine->GetComponent("running"),
@@ -779,17 +764,41 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		"GameInit"
 			));
 
+	debug_state_machine = new DebugStateMachine();
+
+	auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_over_threat"),
+		ltlf::Diamond(ltlf::And(ltlf::Act("pet_taunt"), ltlf::Act("player_die", true)))));
+	auto sigmaAll = std::unordered_set<std::string>{ "player_over_threat", "pet_taunt", "player_die" };
+	auto DebugA = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+
+	formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_die"),
+		ltlf::Next(ltlf::Act("pet_die"))));
+	sigmaAll = std::unordered_set<std::string>{ "player_die", "pet_die" };
+	auto DebugB = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+
+
+	formula = ltlf::Box(ltlf::Implies(ltlf::Act("summon_dragon"),
+		ltlf::And(ltlf::Diamond(ltlf::Act("dragon_die")),
+			ltlf::Until(ltlf::Act("dragon_die", true), ltlf::Act("arrival"))
+		)));
+	sigmaAll = std::unordered_set<std::string>{ "init", "summon_dragon", "arrival","dragon_die" };
+	auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+
+	//debug_state_machine->AddComponent("DebugA", DebugA);
+	debug_state_machine->AddComponent("DebugB", DebugB);
+	debug_state_machine->AddComponent("DebugC", DebugC);
+
 }
 
 void NCL::CSC8503::TutorialGame::gameReset()
 {
 	InitCamera();
 	EventSystem::getInstance()->Reset();
-	initEventhandler();
+	initEventHandler();
 	InitWorld();
 }
 
-void NCL::CSC8503::TutorialGame::initEventhandler()
+void NCL::CSC8503::TutorialGame::initEventHandler()
 {
 	EventSystem::getInstance()->RegisterEventHandler("summon_dragon", [this](EVENT* p_event)->bool
 	{
@@ -797,12 +806,6 @@ void NCL::CSC8503::TutorialGame::initEventhandler()
 		auto monster = dynamic_cast<Monster*>(world->find_game_object(id));
 		_dragon= dynamic_cast<Dragon*>(AddDragonToWorld(Vector3(-50, 10, 0), monster));
 		monster->set_pet(_dragon);
-
-		auto env =new Environment();
-		env->first = "DebugC";
-		env->second.emplace_back(monster->get_monster_state_machine());
-		env->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
-		AdaptiveDebugSystem::getInstance()->insert(env);
 		return true;
 	});
 	EventSystem::getInstance()->RegisterEventHandler("fix_DebugC", [this](EVENT* p_event)->bool

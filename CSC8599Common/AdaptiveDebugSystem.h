@@ -1,6 +1,9 @@
 #pragma once
+#include <ostream>
 #include <stack>
 #include <vector>
+
+#include "StateMachine.h"
 /*
  * 自适应系统
  *
@@ -20,6 +23,20 @@ namespace NCL {
 		using EnvContainer = std::vector<Environment*>;
 		class AdaptiveDebugSystem
 		{
+			friend std::ostream& operator<<(std::ostream& os, const AdaptiveDebugSystem& obj)
+			{
+				std::string buffer("AdaptiveDebugSystem:\n");
+				for(const auto i: obj.env_container_)
+				{
+					buffer += i->first+":\n";
+					for(const auto j:i->second)
+					{
+						buffer += j->Print(0)+"\n";
+					}
+				}
+				return os << buffer;
+			}
+
 		public:
 			static AdaptiveDebugSystem* getInstance()
 			{

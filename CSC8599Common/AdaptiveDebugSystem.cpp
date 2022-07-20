@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "AdaptiveDebugSystem.h"
 
-#include <iostream>
-
 #include "State.h"
 #include "StateMachine.h"
 #include "StateTransition.h"
@@ -30,9 +28,9 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 {
 	const auto env = find_deadlock_env();
 	if (env == nullptr)return;
-	for(auto i:env->second)
+	for(const auto i:env->second)
 	{
-		auto path = re_plan(i);
+		const auto path = re_plan(i);
 		adjust(path,i);
 	}
 	EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
@@ -41,26 +39,26 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_machine)
 {
 	const auto size = path.size();
-	for (int i = 0; i < size - 1; ++i)
+	for (size_t i = 0; i < size - 1; ++i)
 	{
-		auto currentNode = path.top();
+		const auto currentNode = path.top();
 		path.pop();
-		auto destNode = path.top();
+		const auto destNode = path.top();
 		auto currentNodeRange = state_machine->get_transitions(currentNode);
 		auto destNodeRange = state_machine->get_transitions(destNode);
-		for (auto& i = currentNodeRange.first; i != currentNodeRange.second; ++i)
+		for (auto& j = currentNodeRange.first; j != currentNodeRange.second; ++j)
 		{
-			if (i->second->GetDestinationState() == destNode)
+			if (j->second->GetDestinationState() == destNode)
 			{
-				i->second->CanTransition();
+				j->second->CanTransition();
 				break;
 			}
 		}
-		for (auto& i = destNodeRange.first; i != destNodeRange.second; ++i)
+		for (auto& k = destNodeRange.first; k != destNodeRange.second; ++k)
 		{
-			if (i->second->GetDestinationState() == currentNode)
+			if (k->second->GetDestinationState() == currentNode)
 			{
-				i->second->enable = false;// turn off previous trans
+				k->second->enable = false;// turn off previous trans
 				break;
 			}
 		}
@@ -73,10 +71,10 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 {
 	for (auto& env : env_container_)
 	{
-		for (auto& state_machine : env->second)
-		{
-			auto active = state_machine->get_active_component();
-			auto exp = state_machine->get_exp_component();
+		for (const auto& state_machine : env->second)
+		{//	TODO: stateMachine plus 
+			const auto active = state_machine->get_active_component();
+			const auto exp = state_machine->get_exp_component();
 			if (exp == nullptr)   
 				continue;
 			if (active == exp)
@@ -138,11 +136,11 @@ NCL::CSC8599::Path NCL::CSC8599::AdaptiveDebugSystem::re_plan(StateMachine* stat
 		{
 
 			bool skip = false;
-			auto newState = dynamic_cast<State*>(i->second->GetDestinationState());
+			const auto newState = dynamic_cast<State*>(i->second->GetDestinationState());
 			auto newNode = Node(newState);
-			for (auto i : closeList)
+			for (auto j : closeList)
 			{
-				if (newNode.state == i.begin()->state)
+				if (newNode.state == j.begin()->state)
 				{
 					skip = true;
 					break;

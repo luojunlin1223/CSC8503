@@ -24,10 +24,10 @@ std::string NCL::CSC8599::StateMachinePlus::Print(int index)
 	return buffer;
 }
 
-void StateMachinePlus::GetActiveCompoentArr(std::vector<std::string>& arr)
+void StateMachinePlus::GetActiveComponentArr(std::vector<std::string>& arr)
 {
 	for (auto& it : ComponentContainer)
 	{
-		it.second->GetActiveCompoentArr(arr);
+		it.second->GetActiveComponentArr(arr);
 	}
 }

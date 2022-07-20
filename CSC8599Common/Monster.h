@@ -1,10 +1,10 @@
 #pragma once
-#include "Player.h"
+#include "Character.h"
 #include "StateMachine.h"
 namespace NCL {
 	namespace CSC8599
 	{
-		class Monster:public Player
+		class Monster:public Character
 		{
 		public:
 			Monster();
@@ -30,6 +30,12 @@ namespace NCL {
 			bool stand_to_move() override;
 			void move_update(float dt) override;
 			bool alive_to_dead() override;
+			Character* pet = nullptr;
+		public:
+			void set_pet(Character* pet)
+			{
+				this->pet = pet;
+			}
 		};
 	}
 }

@@ -36,13 +36,16 @@ void NCL::CSC8599::Monster::update(float dt)
 void Monster::attack_update(float dt)
 {
 	const auto i = max_element(ThreatMap.begin(), ThreatMap.end(), cmp_value);
+	if (i->second == 0)return;
 	if(!target)
 	{
 		switch_target(i->first);
 	}else
 	{
 		if (target->GetWorldID() != i->first)
+		{
 			switch_target(i->first);
+		}
 	}
 	Character::attack_update(dt);
 }
