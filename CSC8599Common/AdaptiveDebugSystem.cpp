@@ -6,7 +6,7 @@
 #include "State.h"
 #include "StateMachine.h"
 #include "StateTransition.h"
-
+AdaptiveDebugSystem* AdaptiveDebugSystem::instance=nullptr;
 struct Node
 {
 	Node(State* state) :
@@ -35,7 +35,7 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 		auto path = re_plan(i);
 		adjust(path,i);
 	}
-	EventSystem::Get()->PushEvent("fix_"+env->first,0);
+	EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
 }
 
 void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_machine)
@@ -66,8 +66,6 @@ void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_ma
 		}
 	}
 	state_machine->SetActiveComponent(path.top());
-	
-	//TODO:事件系统和 这个系统都应该是一个单例
 }
 
 

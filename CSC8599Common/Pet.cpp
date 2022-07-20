@@ -11,7 +11,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 {
 	init_attrs("pet.json");
 	user_controller_ = new PetController();
-	EventSystem::Get()->RegisterEventHandler("OnHit", [this](EVENT* p_event)->void
+	EventSystem::getInstance()->RegisterEventHandler("OnHit", [this](EVENT* p_event)->void
 		{
 			if (!isAlive())return;
 			const int source = stoi(p_event->vArg[0]);
@@ -29,7 +29,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 			}
 
 		});
-	EventSystem::Get()->RegisterEventHandler("Debug_PetTaunt", [this](EVENT* p_event)->void
+	EventSystem::getInstance()->RegisterEventHandler("Debug_PetTaunt", [this](EVENT* p_event)->void
 		{
 			auto _target=dynamic_cast<Monster*>(target);
 			if(_target)
@@ -37,7 +37,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 				_target->get_taunt(GetWorldID());
 			}
 		});
-	EventSystem::Get()->RegisterEventHandler("Debug_PetDie", [this](EVENT* p_event)->void
+	EventSystem::getInstance()->RegisterEventHandler("Debug_PetDie", [this](EVENT* p_event)->void
 		{
 			data temp;
 			temp._int = 0;
@@ -90,7 +90,7 @@ bool Pet::prepare_to_attack()
 bool Pet::alive_to_dead()
 {
 	const auto result = Character::alive_to_dead();
-	if(result)EventSystem::Get()->PushEvent("PetDie", 1, std::to_string(GetWorldID()).c_str());
+	if(result)EventSystem::getInstance()->PushEvent("PetDie", 1, std::to_string(GetWorldID()).c_str());
 	return result;
 }
 

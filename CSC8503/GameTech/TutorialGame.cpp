@@ -31,7 +31,7 @@ TutorialGame::TutorialGame() {
 	inSelectionMode = false;
 
 	Debug::SetRenderer(renderer);
-	event_system_ = new EventSystem();
+
 	debug_state_machine = new DebugStateMachine();
 
 	auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("a"), 
@@ -53,7 +53,6 @@ TutorialGame::TutorialGame() {
 	auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
 	debug_state_machine->AddComponent("DebugC", DebugC);
-	adaptive_debug_system_ = new AdaptiveDebugSystem();
 
 	initStateMachine();
 	InitialiseAssets();
@@ -119,9 +118,9 @@ TutorialGame::~TutorialGame() {
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
 
-	event_system_->Update(dt);
+	EventSystem::getInstance()->Update(dt);
 
-	adaptive_debug_system_->update(dt);
+	AdaptiveDebugSystem::getInstance()->update(dt);
 	renderer->Update(dt);
 
 	Debug::FlushRenderables(dt);
@@ -130,7 +129,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		event_system_->Reset();
+		EventSystem::getInstance()->Reset();
 		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
@@ -170,7 +169,7 @@ void TutorialGame::UpdateKeys() {
 		DebugObjectMovement();
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F3)) {
-		std::cout<<event_system_->Print(0)<<std::endl;
+		std::cout<<EventSystem::getInstance()->Print(0)<<std::endl;
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F4)) {
@@ -637,19 +636,19 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 					gameReset();
 					localPlayer->set_user_controller(new PlayerAIController(localPlayer));
 					useDebugSM = false;
-					EventSystem::Get()->PushEvent("GameStart", 0);
+					EventSystem::getInstance()->PushEvent("GameStart", 0);
 					break;
 				case 1:
 					gameReset();
 					localPlayer->set_user_controller(new PlayerAIController(localPlayer));
 					useDebugSM = true;
-					EventSystem::Get()->PushEvent("GameStart", 0);
+					EventSystem::getInstance()->PushEvent("GameStart", 0);
 					break;
 				case 2:
 					gameReset();
 					localPlayer->set_user_controller(new PlayerController());
 					useDebugSM = true;
-					EventSystem::Get()->PushEvent("GameStart", 0);
+					EventSystem::getInstance()->PushEvent("GameStart", 0);
 					break;
 				default:
 					break;
@@ -721,12 +720,12 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 				renderer->DrawString("Press enter to 'space' to the main menu", Vector2(25, 60));
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::SPACE))
 				{
-					event_system_->PushEvent("GameInit", 0);
+					EventSystem::getInstance()->PushEvent("GameInit", 0);
 				}
 			}
 			else
 			{
-				event_system_->PushEvent("GameReset", 0);
+				EventSystem::getInstance()->PushEvent("GameReset", 0);
 			}
 			
 		}));
@@ -746,8 +745,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		game_state_machine->GetComponent("end"),
 		[this](EVENT* p_event)->bool
 		{
-			auto monsterDie = EventSystem::Get()->HasHappened("MonsterDie");
-			auto playerDie = EventSystem::Get()->HasHappened("PlayerDie");
+			auto monsterDie = EventSystem::getInstance()->HasHappened("MonsterDie");
+			auto playerDie = EventSystem::getInstance()->HasHappened("PlayerDie");
 			if (monsterDie) win++;
 			if (playerDie)lose++;
 			return monsterDie|| playerDie;
@@ -785,14 +784,14 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 void NCL::CSC8503::TutorialGame::gameReset()
 {
 	InitCamera();
-	event_system_->Reset();
+	EventSystem::getInstance()->Reset();
 	initEventhandler();
 	InitWorld();
 }
 
 void NCL::CSC8503::TutorialGame::initEventhandler()
 {
-	event_system_->RegisterEventHandler("summon_dragon", [this](EVENT* p_event)->bool
+	EventSystem::getInstance()->RegisterEventHandler("summon_dragon", [this](EVENT* p_event)->bool
 	{
 		int id = stoi(p_event->vArg[0]);
 		auto monster = dynamic_cast<Monster*>(world->find_game_object(id));
@@ -803,10 +802,10 @@ void NCL::CSC8503::TutorialGame::initEventhandler()
 		env->first = "DebugC";
 		env->second.emplace_back(monster->get_monster_state_machine());
 		env->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
-		adaptive_debug_system_->insert(env);
+		AdaptiveDebugSystem::getInstance()->insert(env);
 		return true;
 	});
-	event_system_->RegisterEventHandler("fix_DebugC", [this](EVENT* p_event)->bool
+	EventSystem::getInstance()->RegisterEventHandler("fix_DebugC", [this](EVENT* p_event)->bool
 		{
 			_monster->immortal = false;
 			return true;

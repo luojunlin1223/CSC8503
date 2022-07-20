@@ -70,7 +70,7 @@ void NCL::CSC8599::Monster::init_state_machine()
 		});
 	auto end = new State([this](float dt)->void
 	{
-		if(EventSystem::Get()->HasHappened("dragon_die"))
+		if(EventSystem::getInstance()->HasHappened("dragon_die"))
 			immortal = false;
 	});
 	monster_state_machine = new StateMachine("init", init,end);
@@ -83,7 +83,7 @@ void NCL::CSC8599::Monster::init_state_machine()
 			if(health <= 30 && !pet)
 			{
 				immortal = true;
-				EventSystem::Get()->PushEvent("summon_dragon", 1, std::to_string(GetWorldID()).c_str());
+				EventSystem::getInstance()->PushEvent("summon_dragon", 1, std::to_string(GetWorldID()).c_str());
 				return true;
 			}
 			return false;
@@ -130,6 +130,6 @@ void Monster::move_update(float dt)
 bool Monster::alive_to_dead()
 {
 	const auto result = Character::alive_to_dead();
-	if (result)EventSystem::Get()->PushEvent("MonsterDie", 1, std::to_string(GetWorldID()).c_str());
+	if (result)EventSystem::getInstance()->PushEvent("MonsterDie", 1, std::to_string(GetWorldID()).c_str());
 	return result;
 }

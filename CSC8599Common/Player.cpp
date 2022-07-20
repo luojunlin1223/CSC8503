@@ -27,7 +27,7 @@ void NCL::CSC8599::Player::move_update(float dt)
 bool NCL::CSC8599::Player::alive_to_dead()
 {
 	const auto result = Character::alive_to_dead();
-	if (result)EventSystem::Get()->PushEvent("PlayerDie", 1, std::to_string(GetWorldID()).c_str());
+	if (result)EventSystem::getInstance()->PushEvent("PlayerDie", 1, std::to_string(GetWorldID()).c_str());
 	return result;
 }
 
@@ -63,7 +63,7 @@ void NCL::CSC8599::Player::update(float dt)
 		if(_target_target)
 		{
 			if(_target_target->GetWorldID()==GetWorldID())
-				EventSystem::Get()->PushEvent("PlayerOverThreat", 0);
+				EventSystem::getInstance()->PushEvent("PlayerOverThreat", 0);
 		}
 	}
 

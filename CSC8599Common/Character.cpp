@@ -36,7 +36,7 @@ void NCL::CSC8599::Character::get_damage(const int source_id,const int damage)
 	health = health - damage <= 0 ? 0 : health - damage;
 	data._int = health;
 	set_attr("health", data);
-	EventSystem::Get()->PushEvent("OnHit", 2, std::to_string(source_id).c_str(),std::to_string(worldID).c_str());
+	EventSystem::getInstance()->PushEvent("OnHit", 2, std::to_string(source_id).c_str(),std::to_string(worldID).c_str());
 }
 
 bool Character::switch_target(const int target_id)
@@ -45,7 +45,7 @@ bool Character::switch_target(const int target_id)
 	if (!temp)return false;
 	if (target && target->GetWorldID() == temp->GetWorldID())return false;
 	target = temp;
-	EventSystem::Get()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
+	EventSystem::getInstance()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
 	return true;
 }
 
@@ -54,7 +54,7 @@ bool Character::switch_nearest_target()
 	const auto temp = GameWorld::Get()->find_nearest_game_object(this);
 	if (!temp)return false;
 	target = temp;
-	EventSystem::Get()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
+	EventSystem::getInstance()->PushEvent("ThreatChanged", 1, std::to_string(target->GetWorldID()).c_str());
 	return true;
 }
 

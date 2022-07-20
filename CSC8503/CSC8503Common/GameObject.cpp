@@ -50,7 +50,7 @@ void GameObject::UpdateBroadphaseAABB() {//Òª°ÑÆäËûÀàÐÍµÄÅö×²Ìå×ª»»ÎªAABBÀàÐÍµÄÅ
 
 void GameObject::register_handlers()
 {
-	EventSystem::Get()->RegisterEventHandler("ThreatChanged", [this](EVENT* p_event)->void
+	EventSystem::getInstance()->RegisterEventHandler("ThreatChanged", [this](EVENT* p_event)->void
 		{
 			int id = stoi(p_event->vArg[0]);
 			if (id != GetWorldID()) isSelected = false;

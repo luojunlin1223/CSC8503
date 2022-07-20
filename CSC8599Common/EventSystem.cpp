@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EventSystem.h"
-EventSystem* EventSystem::p_self = nullptr;
+EventSystem* EventSystem::instance = nullptr;
 extern EVENT_DEFINE g_Events[] =
 {
 	{"ThreatChanged"},
@@ -25,7 +25,6 @@ extern EVENT_DEFINE g_Events[] =
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {
-	p_self = this;
 	init();
 }
 

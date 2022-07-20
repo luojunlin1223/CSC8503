@@ -111,8 +111,6 @@ namespace NCL {
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
-			//EventSystem
-			EventSystem* event_system_ = nullptr;
 
 			//DebugSM
 			bool useDebugSM = false;
@@ -134,9 +132,6 @@ namespace NCL {
 			int total = 10;
 
 			void initEventhandler();
-
-			//
-			AdaptiveDebugSystem* adaptive_debug_system_=nullptr;
 
 		};
 	}

@@ -4,7 +4,7 @@
 void  NCL::CSC8599::StateMachine::Update(float dt) {
 	if (activeComponent == nullptr)return;
 	activeComponent->Update(dt);
-	//Get the transition set starting from this state node;
+	//getInstance the transition set starting from this state node;
 	auto range = get_transitions(activeComponent);
 
 	for (auto& i = range.first; i != range.second; ++i)

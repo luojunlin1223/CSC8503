@@ -40,9 +40,9 @@ namespace NCL {
 			return (buttons[(int)button] && doubleClicks[(int)button]);
 		}
 
-		//Get how much this mouse has moved since last frame
+		//getInstance how much this mouse has moved since last frame
 		inline Vector2	GetRelativePosition() const { return relativePosition; }
-		//Get the window position of the mouse pointer
+		//getInstance the window position of the mouse pointer
 		inline Vector2	GetAbsolutePosition() const { return absolutePosition; }
 
 		inline Vector2 GetWindowPosition() const {
@@ -51,7 +51,7 @@ namespace NCL {
 
 		//Has the mouse wheel moved since the last update?
 		inline bool	WheelMoved() const { return frameWheel != 0; }
-		//Get the mousewheel movement. Positive means scroll up,
+		//getInstance the mousewheel movement. Positive means scroll up,
 		//negative means scroll down, 0 means no movement.
 		inline int	GetWheelMovement() const { return (int)frameWheel; }
 
