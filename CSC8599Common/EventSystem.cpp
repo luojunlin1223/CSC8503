@@ -4,12 +4,12 @@ EventSystem* EventSystem::instance = nullptr;
 extern EVENT_DEFINE g_Events[] =
 {
 	{"ThreatChanged"},
-	{"OnHit"},
+	{"on_hit"},
 	{"player_over_threat"},
 	{"player_die"},
 	{"pet_die"},
 	{"pet_taunt",true},
-	{"fix_PetDie"},
+	{"fix_DebugB"},
 	{"MonsterDie"},
 	{"GameStart"},
 	{"GameReset"},

@@ -37,7 +37,7 @@ void NCL::CSC8599::Character::get_damage(const int source_id,const int damage)
 	health = health - damage <= 0 ? 0 : health - damage;
 	data._int = health;
 	set_attr("health", data);
-	EventSystem::getInstance()->PushEvent("OnHit", 2, std::to_string(source_id).c_str(),std::to_string(worldID).c_str());
+	EventSystem::getInstance()->PushEvent("on_hit", 2, std::to_string(source_id).c_str(),std::to_string(worldID).c_str());
 }
 
 bool Character::switch_target(const int target_id)

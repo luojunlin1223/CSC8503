@@ -46,12 +46,12 @@ TutorialGame::TutorialGame() {
 	envA->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugA")));
 	AdaptiveDebugSystem::getInstance()->insert(envA);*/
 
-	auto envB = new Environment();
+	/*auto envB = new Environment();
 	envB->first = "DebugB";
 	envB->second.emplace_back(localPlayer->get_state_machine());
 	envB->second.emplace_back(_pet->get_state_machine());
 	envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
-	AdaptiveDebugSystem::getInstance()->insert(envB);
+	AdaptiveDebugSystem::getInstance()->insert(envB);*/
 
 }
 
@@ -768,12 +768,12 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 	auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_over_threat"),
 		ltlf::Diamond(ltlf::And(ltlf::Act("pet_taunt"), ltlf::Act("player_die", true)))));
-	auto sigmaAll = std::unordered_set<std::string>{ "player_over_threat", "pet_taunt", "player_die" };
+	auto sigmaAll = std::unordered_set<std::string>{ "player_over_threat", "pet_taunt", "player_die","other"};
 	auto DebugA = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
 	formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_die"),
 		ltlf::Next(ltlf::Act("pet_die"))));
-	sigmaAll = std::unordered_set<std::string>{ "player_die", "pet_die" };
+	sigmaAll = std::unordered_set<std::string>{ "player_die", "pet_die" ,"other"};
 	auto DebugB = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
 
@@ -781,11 +781,11 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		ltlf::And(ltlf::Diamond(ltlf::Act("dragon_die")),
 			ltlf::Until(ltlf::Act("dragon_die", true), ltlf::Act("arrival"))
 		)));
-	sigmaAll = std::unordered_set<std::string>{ "init", "summon_dragon", "arrival","dragon_die" };
+	sigmaAll = std::unordered_set<std::string>{ "init", "summon_dragon", "arrival","dragon_die" ,"other"};
 	auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
 	//debug_state_machine->AddComponent("DebugA", DebugA);
-	debug_state_machine->AddComponent("DebugB", DebugB);
+	//debug_state_machine->AddComponent("DebugB", DebugB);
 	debug_state_machine->AddComponent("DebugC", DebugC);
 
 }

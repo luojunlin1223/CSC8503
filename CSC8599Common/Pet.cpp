@@ -14,7 +14,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 {
 	init_attrs("pet.json");
 	user_controller_ = new PetController();
-	EventSystem::getInstance()->RegisterEventHandler("OnHit", [this](EVENT* p_event)->void
+	EventSystem::getInstance()->RegisterEventHandler("on_hit", [this](EVENT* p_event)->void
 		{
 			if (!isAlive())return;
 			const int source = stoi(p_event->vArg[0]);
@@ -41,7 +41,7 @@ Pet::Pet(Character* _owner) :owner(_owner)
 				EventSystem::getInstance()->PushEvent("pet_taunt", 0);
 			}*/
 		});
-	EventSystem::getInstance()->RegisterEventHandler("fix_PetDie", [this](EVENT* p_event)->void
+	EventSystem::getInstance()->RegisterEventHandler("fix_DebugB", [this](EVENT* p_event)->void
 		{
 			data temp;
 			temp._int = 0;

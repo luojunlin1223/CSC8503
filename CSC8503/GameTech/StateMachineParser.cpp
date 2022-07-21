@@ -110,11 +110,14 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unorde
         {
             auto startNode = parsedNodes.find(i);
             auto destNode = parsedNodes.find(j.second);
+            auto temp = std::string();
+            if (j.first == "other"&& startNode!=destNode)temp = "";
+            else temp = j.first;
             auto trans = new StateTransition(startNode->second, destNode->second, 
                 [](EVENT*)->bool
                 {
 	                return true;
-                }, j.first);
+                }, temp);
 
             parsedEdges.emplace_back(trans);
             bool skip = false;
